@@ -1,6 +1,19 @@
+"""Parse the HTML"""
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+import os 
+import logging
+
+LOG_FILE = os.getenv("LOG_FILE")
+
+logging.basicConfig(filename=LOG_FILE,
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def parse_html(html:str,from_url:str)->pd.DataFrame:
     """
