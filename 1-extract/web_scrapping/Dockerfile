@@ -9,7 +9,5 @@ COPY ./app .
 
 RUN mkdir logs
 
-ENV PATH="/usr/src/app/utils/chromedriver:$PATH"
-RUN echo "export PATH=$PATH" >> /etc/profile
 
 CMD ["sleep","10000"]
