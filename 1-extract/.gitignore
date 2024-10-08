@@ -3,3 +3,4 @@ scrap_env
 venv
 __pycache__
 .log
+.env
