@@ -59,4 +59,5 @@ def api_extraction()->pd.DataFrame:
     return df
 
 if __name__=='__main__':
-    api_extraction()
+    df = api_extraction()
+    print(df.head())
