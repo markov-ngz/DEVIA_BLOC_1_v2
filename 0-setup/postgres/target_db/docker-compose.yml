@@ -1,0 +1,14 @@
+services:
+  target_database:
+    container_name: target_db
+    image: postgres:12-alpine
+    ports:
+      - 127.0.0.1:7432:5432
+    env_file:
+      - .env
+    volumes:
+      - cdc-data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+volumes:
+  target-data:
+    name: "target_db"
