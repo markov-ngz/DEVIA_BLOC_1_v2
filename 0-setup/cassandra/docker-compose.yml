@@ -68,5 +68,5 @@ services:
       retries: 3
 
     depends_on:
-      node-1:
+      node-2:
         condition: service_healthy
