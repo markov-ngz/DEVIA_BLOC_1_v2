@@ -1,0 +1,10 @@
+---
+- name: Add User and authorize a public key
+  become: yes
+  hosts : 
+    - default
+  roles : 
+    - add_user
+  vars : 
+    user_name: "{{ lookup('ansible.builtin.env', 'SFTP_USER') }}"
+    user_public_key : "{{ lookup('ansible.builtin.env', 'SFTP_PUBLIC_KEY') }}"
