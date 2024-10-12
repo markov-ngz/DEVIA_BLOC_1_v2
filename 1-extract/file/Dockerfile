@@ -1,11 +1,19 @@
-FROM python:3.11-alpine
+FROM ubuntu:latest
 
-WORKDIR /usr/src/app
+RUN apt update -y
 
-COPY requirements.txt ./
+RUN apt install python3 python3-pip openssh-client -y
 
-RUN pip install --no-cache-dir -r requirements.txt
+USER ubuntu 
 
-COPY ./app .
+RUN mkdir /home/ubuntu/.ssh
 
-CMD ["python","main.py"]
+COPY ./src /home/ubuntu/
+COPY ./requirements.txt /home/ubuntu/requirements.txt
+COPY ./entrypoint.sh /
+
+RUN pip install -r /home/ubuntu/requirements.txt --break-system-packages
+
+WORKDIR /home/ubuntu
+
+ENTRYPOINT ["sh","/entrypoint.sh"]

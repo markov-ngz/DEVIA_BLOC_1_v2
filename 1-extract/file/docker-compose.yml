@@ -1,0 +1,8 @@
+services:
+  file:
+    container_name: file
+    image: markreduce/etl:file
+    volumes:
+      - ./sftp:/home/ubuntu/
+    env_file:
+      - .env
