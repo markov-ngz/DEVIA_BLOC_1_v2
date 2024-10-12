@@ -3,6 +3,7 @@ services:
     container_name: file
     image: markreduce/etl:file
     volumes:
-      - ./sftp:/home/ubuntu/
+      - ./sftp:/home/ubuntu/sftp
+      - ./known_hosts:/home/ubuntu/.ssh/known_hosts
     env_file:
       - .env

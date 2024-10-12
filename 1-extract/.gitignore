@@ -6,3 +6,6 @@ __pycache__
 .env
 venv
 .gitignore
+sftp
+known_hosts
+.gitignore
