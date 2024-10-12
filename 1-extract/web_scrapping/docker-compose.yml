@@ -6,12 +6,8 @@ services:
       context: .
     volumes:
       - scrap_logs:/usr/src/app/logs
-      - debug:/root/
     environment:
       LOG_FILE: ./logs/.log
-      DRIVER_PATH: ./utils/chromedriver
 volumes:
   scrap_logs:
     name: "scrap_logs"
-  debug:
-    name: "debug"

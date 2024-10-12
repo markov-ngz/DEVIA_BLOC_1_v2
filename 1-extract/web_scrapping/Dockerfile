@@ -9,5 +9,4 @@ COPY ./app .
 
 RUN mkdir logs
 
-
-CMD ["sleep","10000"]
+CMD ["python","main.py"]

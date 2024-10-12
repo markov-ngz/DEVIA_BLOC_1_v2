@@ -3,8 +3,6 @@ from html_scrap import HTMLScrapper
 import logging
 import os 
 
-
-
 class WebScrapping():
 
     url = "https://fr.wikiversity.org/wiki/Polonais/Vocabulaire/Se_pr%C3%A9senter"
@@ -24,8 +22,10 @@ class WebScrapping():
                             level=logging.INFO)
         logger = logging.getLogger(__name__)
         html_scrapped = HTMLScrapper.get_content(self.url)
-        raw_df_scrap = HTMLScrapper.parse_html(html_scrapped,self.url)
+        raw_df_scrap = HTMLParser.parse_html(html_scrapped,self.url)
 
         print(raw_df_scrap)
 
 
+if __name__=='__main__':
+    WebScrapping()
