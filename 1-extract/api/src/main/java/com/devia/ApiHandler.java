@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.net.URI;
 
+/*
+ * Send an API request with the specific header to wait for the huggingface model to finish loading
+ */
 public class ApiHandler {
     
     private String apiKey ; 

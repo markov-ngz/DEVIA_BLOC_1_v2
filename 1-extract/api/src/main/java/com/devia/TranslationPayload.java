@@ -6,6 +6,9 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.MapSerializer;
 
+/*
+ * Translation payload to send to the HuggingFace API 
+ */
 public class TranslationPayload {
     
     private String inputs ; 
