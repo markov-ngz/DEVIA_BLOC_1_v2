@@ -7,15 +7,15 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 public class IngestionProducer {
 
-    Properties properties = new Properties() ;
+    private Properties properties = new Properties() ;
 
-    String serializer="org.apache.kafka.common.serialization.StringSerializer" ;
+    private String serializer="org.apache.kafka.common.serialization.StringSerializer" ;
 
-    String topic ; 
+    private String topic ; 
     
-    String bootstrap_server ;
+    private String bootstrap_server ;
     
-    Producer<String, String> producer;
+    public Producer<String, String> producer;
 
     public  IngestionProducer(String topic,String bootstrap_server){
         this.topic = topic ;
@@ -40,4 +40,10 @@ public class IngestionProducer {
         this.properties.put("value.serializer", this.serializer);
     }
 
+    public void writeMessage(String key, String value) {
+        ProducerRecord<String,String> record =  new ProducerRecord<String,String>(this.topic, key, value) ;  
+        this.producer.send(record) ; 
+        producer.flush();
+    }
+    
 }
