@@ -19,23 +19,28 @@ public class App {
         String publish_topic = System.getenv("KAFKA_TOPIC"); ; 
 
         // String url = "https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt" ; 
-        IngestionProducer producer = new IngestionProducer(publish_topic,bootstrap_server);
+        // IngestionProducer producer = new IngestionProducer(publish_topic,bootstrap_server);
         
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // TranslationPayload map = new TranslationPayload("Bonjour");
+        TranslationPayload map = new TranslationPayload("Bonjour");
         // String requestBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
         
         // ApiHandler api = new ApiHandler();
         // HttpResponse<String> response = api.sendPOST(url, requestBody);
         // System.out.println(response.body());
-        // String body = "[{\"translation_text\":\"Witaj!\"}]" ; 
+        String body = "[{\"translation_text\":\"Witaj!\"}]" ; 
 
-        // TranslationResponse[] translated_texts = objectMapper.readValue(body, TranslationResponse[].class);
+        TranslationResponse[] translated_texts = objectMapper.readValue(body, TranslationResponse[].class);
         
-        // String witaj = translated_texts[0].getTranslation_text();
-        producer.writeMessage("123456", "random");
+        Translation final_translation = new Translation(map.getInputs(), translated_texts[0].getTranslation_text());
 
-        producer.producer.close();
+        String translation_json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(final_translation);
+
+        System.out.println(translation_json);
+
+        // producer.writeMessage("123456", "random");
+
+        // producer.producer.close();
     }
 }
