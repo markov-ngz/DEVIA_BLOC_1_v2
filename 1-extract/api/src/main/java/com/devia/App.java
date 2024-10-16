@@ -1,16 +1,8 @@
 package com.devia;
 
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.kafka.shaded.com.google.protobuf.Api;
-
-import com.devia.IngestionProducer;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Hello world!

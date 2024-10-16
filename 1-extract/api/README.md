@@ -1,8 +1,15 @@
 # API Extraction
-From a csv with french sentence , make an API call to translate them to polish.
+API call to  : https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt 
+It translates a predefinite list of sentences into polish text. 
+
+The translation are then written into a Topic.
 
 The following environment variable must be set :
 ```
-AUTH_TOKEN_HF_API=
-CSV_PATH=
+API_KEY=
+KAFKA_BOOTSTRAP_SERVER=
+KAFKA_TOPIC=
 ```
+
+### Generate WAR file 
+

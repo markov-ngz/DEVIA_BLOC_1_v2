@@ -1,12 +1,4 @@
-FROM python:3.11-alpine
-
-WORKDIR /usr/src/app
-
-COPY requirements.txt ./
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY ./app .
-COPY french_sentence.csv .
-
-CMD ["python","api.py"]
+FROM openjdk:24-ea-oraclelinux9
+WORKDIR /app
+COPY target/api-1.0-SNAPSHOT.jar api.jar
+ENTRYPOINT ["java", "-jar", "api.jar"] 
