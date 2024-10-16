@@ -1,0 +1,8 @@
+services:
+  api:
+    container_name: etl_api
+    image: markreduce/etl:api
+    build:
+      context: .
+    env_files:
+      - .env

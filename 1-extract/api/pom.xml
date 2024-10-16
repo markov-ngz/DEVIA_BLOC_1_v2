@@ -6,7 +6,6 @@
   <groupId>com.devia</groupId>
   <artifactId>api</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
   <name>api</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
@@ -30,7 +29,6 @@
   </dependencyManagement>
 
   <dependencies>
-      
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -101,17 +99,6 @@
           <version>3.3.0</version>
         </plugin>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.4.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>3.4.0</version>
-            <configuration>
-                <failOnMissingWebXml>false</failOnMissingWebXml>
-            </configuration>
-        </plugin>
-        <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>3.1.2</version>
         </plugin>
@@ -128,7 +115,32 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.6.1</version>
         </plugin>
+              <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+        <appendAssemblyId>False</appendAssemblyId>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>com.devia.App</mainClass>
+              </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       </plugins>
+      
     </pluginManagement>
   </build>
 </project>
