@@ -4,5 +4,5 @@ services:
     image: markreduce/etl:api
     build:
       context: .
-    env_files:
+    env_file:
       - .env

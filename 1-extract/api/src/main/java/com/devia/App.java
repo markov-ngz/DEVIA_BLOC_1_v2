@@ -3,13 +3,19 @@ package com.devia;
 import java.net.http.HttpResponse;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Hello world!
  */
 public class App {
-    public static void main(String[] args) throws Exception {
 
+    private static final Logger Logger = LogManager.getLogger();
+    
+    public static void main(String[] args) throws Exception {
+        System.setProperty("log4j.configurationFile","./log4j2.xml");
         // Kafka Topic whereabouts 
         String bootstrap_server = System.getenv("KAFKA_BOOTSTRAP_SERVER"); 
         String publish_topic = System.getenv("KAFKA_TOPIC"); 
@@ -31,6 +37,8 @@ public class App {
 
         // Iterate over the sentences 
         for (String sentence : item_to_translate) {
+            
+            Logger.info(String.format("Beginning translation of word : %s", sentence));
 
             TranslationPayload translation_payload = new TranslationPayload(sentence);
 
@@ -47,6 +55,7 @@ public class App {
 
             String translation_json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(final_translation);
 
+            Logger.info(translation_json) ; 
             // value is used as key in order to avoid duplicate to the topic 
             producer.writeMessage(translation_json, translation_json);
             

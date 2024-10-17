@@ -15,7 +15,7 @@
   </Appenders>
 
   <Loggers>
-    <Logger name="com.snippet" level="DEBUG"> 
+    <Logger name="com.devia" level="DEBUG"> 
       <AppenderRef ref="MAIN"/>
     </Logger>
   </Loggers>

@@ -20,7 +20,13 @@ services:
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
       - zookeeper
-
+  api:
+    container_name: etl_api
+    image: markreduce/etl:api
+    env_file:
+      - .env
+    depends_on:
+      - broker1
   # broker2: 
   #   container_name: broker2
   #   hostname: broker2
