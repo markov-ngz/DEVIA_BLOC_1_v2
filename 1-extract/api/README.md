@@ -43,3 +43,8 @@ Create a single jar file with dependencies & your code
 mvn clean compile package assembly:single
 java -jar target\api-1.0-SNAPSHOT.jar
 ```
+
+Extract information from the jar file 
+```
+jar xf <filename>.jar
+```

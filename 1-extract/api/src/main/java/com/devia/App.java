@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class App {
 
-    private static final Logger Logger = LogManager.getLogger();
+    private static final Logger Logger = LogManager.getLogger(App.class);
     
     public static void main(String[] args) throws Exception {
         System.setProperty("log4j.configurationFile","./log4j2.xml");
