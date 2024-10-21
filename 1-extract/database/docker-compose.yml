@@ -1,0 +1,95 @@
+services:
+  db:
+    container_name: pg_db
+    image: postgres:12-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    ports: # expose port to local interface in order to make changes with the simulate_traffic.py script
+      - 127.0.0.1:5432:5432
+    env_file:
+      - .env
+    networks:
+      net1:
+        ipv4_address: 172.20.0.2
+  zookeeper:
+    container_name: zookeeper
+    image: quay.io/debezium/zookeeper:2.5
+    networks:
+      net1:
+        ipv4_address: 172.20.0.3
+
+  broker1: 
+    container_name: broker1
+    hostname: broker1
+    image: quay.io/debezium/kafka:2.5
+    ports:
+      - 127.0.0.1:29092:29092 
+    environment:
+      - BROKER_ID=1
+      - ZOOKEEPER_CONNECT=zookeeper
+    networks:
+      net1:
+        ipv4_address: 172.20.0.4
+    depends_on:
+      - zookeeper
+  broker2: 
+    container_name: broker2
+    hostname: broker2
+    image: quay.io/debezium/kafka:2.5
+    ports:
+      - 127.0.0.1:9092:9092 
+    environment:
+      - BROKER_ID=2
+      - ZOOKEEPER_CONNECT=zookeeper
+    networks:
+      net1:
+        ipv4_address: 172.20.0.6
+    depends_on:
+      - zookeeper
+  broker3: 
+    container_name: broker3
+    hostname: broker3
+    image: quay.io/debezium/kafka:2.5
+    ports:
+      - 127.0.0.1:9093:9092 # open port 9092 however it is not necessary 
+    environment:
+      - BROKER_ID=3
+      - ZOOKEEPER_CONNECT=zookeeper
+    networks:
+      net1:
+        ipv4_address: 172.20.0.7
+    depends_on:
+      - zookeeper
+  connect:
+    container_name: connect
+    image: quay.io/debezium/connect:2.5
+    environment:
+      - CONFIG_STORAGE_TOPIC=pg_cdc
+      - OFFSET_STORAGE_TOPIC=pg_offset
+      - STATUS_STORAGE_TOPIC=pg_status
+      - BOOTSTRAP_SERVERS=broker1:9092
+    ports:
+      - 127.0.0.1:8083:8083 # to use Connect Rest API endpoint for other applications
+    networks:
+      net1:
+        ipv4_address: 172.20.0.5
+    depends_on:
+      - zookeeper
+      - broker1
+      - broker2
+      - broker3
+      - db
+volumes:
+  postgres-data:
+    name: "pg_db"
+
+networks:
+  net1:
+    name: net1
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
