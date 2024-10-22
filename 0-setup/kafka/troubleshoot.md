@@ -22,7 +22,7 @@
 ./bin/zkCli.sh -server zookeeper:2181
 
 # Get brokers's id
-ls brokers/id
+ls /brokers/ids
 
 # Get topics 
 ls /brokers/topics

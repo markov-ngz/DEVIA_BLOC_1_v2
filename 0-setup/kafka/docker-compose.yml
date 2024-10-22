@@ -17,35 +17,48 @@ services:
       - KAFKA_ADVERTISED_LISTENERS=INTERNAL://broker1:29092,EXTERNAL://localhost:9092
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - CREATE_TOPICS=raw_api:1:1:compact,raw_cdc:1:1:compact,clean_data:1:1:compact
+      - KAFKA_CREATE_TOPICS=raw_api:1:1:compact,clean_data:1:1:compact
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
       - zookeeper
     networks:
       kafka:
-  # broker2: 
-  #   container_name: broker2
-  #   hostname: broker2
-  #   image: quay.io/debezium/kafka:3.0
-  #   ports:
-  #     - 127.0.0.1:9092:9092 
-  #   environment:
-  #     - BROKER_ID=2
-  #     - ZOOKEEPER_CONNECT=zookeeper
-  #   depends_on:
-  #     - zookeeper
-
-  # broker3: 
-  #   container_name: broker3
-  #   hostname: broker3
-  #   image: quay.io/debezium/kafka:3.0
-  #   ports:
-  #     - 127.0.0.1:9093:9092 # open port 9092 however it is not necessary 
-  #   environment:
-  #     - BROKER_ID=3
-  #     - ZOOKEEPER_CONNECT=zookeeper
-  #   depends_on:
-  #     - zookeeper
+  broker2: 
+    container_name: broker2
+    hostname: broker2
+    image: quay.io/debezium/kafka:3.0
+    ports:
+      - 127.0.0.1:9092:9092 
+    environment:
+      - BROKER_ID=2
+      - ZOOKEEPER_CONNECT=zookeeper
+      - KAFKA_LISTENERS=INTERNAL://:29092,EXTERNAL://:9092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://broker2:29092,EXTERNAL://localhost:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      kafka:
+    depends_on:
+      - zookeeper
+      - broker1
+  broker3: 
+    container_name: broker3
+    hostname: broker3
+    image: quay.io/debezium/kafka:3.0
+    ports:
+      - 127.0.0.1:9093:9092 # open port 9092 however it is not necessary 
+    environment:
+      - BROKER_ID=3
+      - ZOOKEEPER_CONNECT=zookeeper
+      - KAFKA_LISTENERS=INTERNAL://:29092,EXTERNAL://:9092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://broker3:29092,EXTERNAL://localhost:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      kafka:
+    depends_on:
+      - zookeeper
+      - broker2
 networks:
   kafka:
     name: kafka

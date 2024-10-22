@@ -8,12 +8,11 @@ services:
       - .env
     volumes:
       - cdc-data:/var/lib/postgresql/data
-      - .\init\:/docker-entrypoint-initdb.d/
     networks:
       kafka:
 volumes:
   cdc-data:
-    name: "cdc_db"
+    name: "cdc-data"
 
 networks:
   kafka:
