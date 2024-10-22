@@ -1,8 +1,14 @@
 services:
   api:
     container_name: etl_api
-    image: markreduce/etl:api
+    # image: markreduce/etl:api
     build:
       context: .
     env_file:
       - .env
+    networks:
+      kafka:
+networks:
+  kafka:
+    name: kafka
+    external: true

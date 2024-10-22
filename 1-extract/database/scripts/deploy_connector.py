@@ -8,14 +8,14 @@ connector_config = {
     "plugin.name":"pgoutput",
     "slot.name":os.getenv("SLOT_NAME"),
     "publication.name":os.getenv("PUBLICATION_NAME"),
-    "database.hostname": "db", # match the name of the docker compose file 
+    "database.hostname": "cdc_database", # match the name of the docker compose file 
     "database.port": "5432", 
     "database.user": os.getenv("DEBEZIUM_USER"), 
     "database.password": os.getenv("DEBEZIUM_PASSWORD"), 
     "database.dbname" : os.getenv("POSTGRES_DB"), 
     "topic.prefix": "connector",
-    "topic.creation.default.replication.factor": 3,  
-    "topic.creation.default.partitions": 3,
+    "topic.creation.default.replication.factor": 1,  
+    "topic.creation.default.partitions": 1,
   }
 }
 headers = {
