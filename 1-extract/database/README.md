@@ -16,7 +16,7 @@ Performing Capture Data Change on a Postgres database.
 3. Fake the database operations by running the script   ```simulate_traffic.py``` 
 4. Check if the message are published to the topic, by executing to a broker's container and running : 
 ```
-./bin/kafka-console-consumer.sh  --topic <topic_name> --bootstrap-server <bootstrap_server>:9092 --consumer-property group.id=<group_name>
+./bin/kafka-console-consumer.sh  --topic <prefix.schema.table> --bootstrap-server <bootstrap_server>:<internal advertised port> --consumer-property group.id=<group_name>
 ```
 
 ## Documentation

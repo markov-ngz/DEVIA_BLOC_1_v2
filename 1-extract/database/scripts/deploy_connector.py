@@ -14,7 +14,7 @@ connector_config = {
     "database.password": os.getenv("DEBEZIUM_PASSWORD"), 
     "database.dbname" : os.getenv("POSTGRES_DB"), 
     "topic.prefix": "connector",
-    "topic.creation.default.replication.factor": 1,  
+    "topic.creation.default.replication.factor": 3,  
     "topic.creation.default.partitions": 1,
   }
 }
