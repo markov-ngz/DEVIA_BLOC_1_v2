@@ -1,0 +1,2 @@
+Main-Class: com.devia.App
+Multi-Release:true
