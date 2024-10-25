@@ -14,6 +14,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+    <exec.mainClass>com.devia.App</exec.mainClass>
   </properties>
 
   <dependencyManagement>
@@ -26,7 +27,22 @@
         <scope>import</scope>
       </dependency>
     </dependencies>
-      <!-- Apache Kafka dependencies -->
+
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Optionally: parameterized tests support -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+    </dependency>
+          <!-- Apache Kafka dependencies -->
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
@@ -65,20 +81,6 @@
       <artifactId>log4j-layout-template-json</artifactId>
       <scope>runtime</scope>
       <version>2.24.0</version>
-    </dependency>
-  </dependencyManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- Optionally: parameterized tests support -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

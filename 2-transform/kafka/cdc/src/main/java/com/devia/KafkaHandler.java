@@ -39,6 +39,7 @@ public class KafkaHandler {
         this.producer = new KafkaProducer<String, String>(this.properties) ; 
     }
 
+    
     public void setConsumer(String topic, String bootstrap_server){
         this.topic = topic ;
         this.bootstrap_server = bootstrap_server ;  
@@ -76,7 +77,7 @@ public class KafkaHandler {
 
     public void readMessage(){
         this.consumer.subscribe(Arrays.asList(this.topic));
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(50));
 
         for (ConsumerRecord<String, String> record : records) {
             System.out.println(record.value());
