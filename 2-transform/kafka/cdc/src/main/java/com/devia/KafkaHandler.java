@@ -1,87 +1,99 @@
-package com.devia ;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.UUID;
-
-import org.apache.kafka.clients.producer.Producer;
+package com.devia;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.Duration;
+import java.util.Collections;
+import java.util.Properties;
+import java.util.concurrent.Future;
 
 public class KafkaHandler {
+    private Properties producerProps;
+    private Properties consumerProps;
+    private KafkaProducer<String, String> producer;
+    private KafkaConsumer<String, String> consumer;
+    private final ObjectMapper objectMapper;
 
-    private Properties properties = new Properties() ;
-
-    private String serializer="org.apache.kafka.common.serialization.StringSerializer" ;
-
-    private String topic ; 
-    
-    private String bootstrap_server ;
-    
-    public Producer<String, String> producer;
-
-    public KafkaConsumer<String, String> consumer ;  
-
-    public  KafkaHandler(){
-
-    }
-    public void setProducer(String topic, String bootstrap_server){
-        this.topic = topic ;
-        this.bootstrap_server = bootstrap_server ;  
-        this.setProperties();
-
-        this.producer = new KafkaProducer<String, String>(this.properties) ; 
+    public KafkaHandler() {
+        this.objectMapper = new ObjectMapper();
     }
 
-    
-    public void setConsumer(String topic, String bootstrap_server){
-        this.topic = topic ;
-        this.bootstrap_server = bootstrap_server ;  
-        this.setProperties();
-        this.properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
-        
-        this.properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        this.properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        // as this is for testing, generate a random group id
-        this.properties.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString()); 
+    public void setProperties(String bootstrapServers, String groupId) {
+        // Producer properties
+        producerProps = new Properties();
+        producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        producerProps.put(ProducerConfig.ACKS_CONFIG, "all");
+        producerProps.put(ProducerConfig.RETRIES_CONFIG, 3);
 
-        this.consumer = new KafkaConsumer<>(this.properties);
+        // Consumer properties
+        consumerProps = new Properties();
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+
+        // Initialize producer and consumer
+        producer = new KafkaProducer<>(producerProps);
+        consumer = new KafkaConsumer<>(consumerProps);
     }
 
-    private void setProperties(){
-
-        // bootstrap server address
-        this.properties.put("bootstrap.servers", this.bootstrap_server) ;
-        //Specify buffer size in config
-        this.properties.put("batch.size", 16384);
-        //Reduce the no of requests less than 0   
-        this.properties.put("linger.ms", 1);
-        //The buffer.memory controls the total amount of memory available to the producer for buffering.   
-        this.properties.put("buffer.memory", 33554432);
-        //Format Serialization
-        this.properties.put("key.serializer",this.serializer);
-        this.properties.put("value.serializer", this.serializer);
-    }
-
-    public void writeMessage(String key, String value) {
-        ProducerRecord<String,String> record =  new ProducerRecord<String,String>(this.topic, key, value) ;  
-        this.producer.send(record) ; 
-        producer.flush();
-    }
-
-    public void readMessage(){
-        this.consumer.subscribe(Arrays.asList(this.topic));
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(50));
-
-        for (ConsumerRecord<String, String> record : records) {
-            System.out.println(record.value());
+    public Future<?> publish(String topic, String key, String message) {
+        try {
+            ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, message);
+            return producer.send(record);
+        } catch (Exception e) {
+            throw new RuntimeException("Error publishing message to Kafka", e);
         }
     }
-    
+
+    public <T> Future<?> publish(String topic, String key, T object) {
+        try {
+            String jsonMessage = objectMapper.writeValueAsString(object);
+            return publish(topic, key, jsonMessage);
+        } catch (Exception e) {
+            throw new RuntimeException("Error serializing object to JSON", e);
+        }
+    }
+
+    public ConsumerRecords<String, String> consume(String topic, Duration timeout) {
+        try {
+            consumer.subscribe(Collections.singletonList(topic));
+            return consumer.poll(timeout);
+        } catch (Exception e) {
+            throw new RuntimeException("Error consuming messages from Kafka", e);
+        }
+    }
+
+    public <T> T parseJson(String jsonMessage, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(jsonMessage, clazz);
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing JSON message", e);
+        }
+    }
+
+    public <T> T parseJson(ConsumerRecord<String, String> record, Class<T> clazz) {
+        return parseJson(record.value(), clazz);
+    }
+
+    public void close() {
+        if (producer != null) {
+            producer.close();
+        }
+        if (consumer != null) {
+            consumer.close();
+        }
+    }
 }
