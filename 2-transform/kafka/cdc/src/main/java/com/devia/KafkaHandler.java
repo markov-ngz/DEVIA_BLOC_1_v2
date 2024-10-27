@@ -6,12 +6,15 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Arrays;
+import java.util.UUID;
+
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.Future;
 
@@ -38,21 +41,21 @@ public class KafkaHandler {
         // Consumer properties
         consumerProps = new Properties();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        // consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 
         // Initialize producer and consumer
-        producer = new KafkaProducer<>(producerProps);
-        consumer = new KafkaConsumer<>(consumerProps);
+        this.producer = new KafkaProducer<>(producerProps);
+        this.consumer = new KafkaConsumer<>(consumerProps);
     }
 
     public Future<?> publish(String topic, String key, String message) {
         try {
             ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, message);
-            return producer.send(record);
+            return this.producer.send(record);
         } catch (Exception e) {
             throw new RuntimeException("Error publishing message to Kafka", e);
         }
@@ -60,7 +63,7 @@ public class KafkaHandler {
 
     public <T> Future<?> publish(String topic, String key, T object) {
         try {
-            String jsonMessage = objectMapper.writeValueAsString(object);
+            String jsonMessage = this.objectMapper.writeValueAsString(object);
             return publish(topic, key, jsonMessage);
         } catch (Exception e) {
             throw new RuntimeException("Error serializing object to JSON", e);
@@ -69,8 +72,10 @@ public class KafkaHandler {
 
     public ConsumerRecords<String, String> consume(String topic, Duration timeout) {
         try {
-            consumer.subscribe(Collections.singletonList(topic));
-            return consumer.poll(timeout);
+            this.consumer.subscribe(Arrays.asList(topic));
+
+            return this.consumer.poll(timeout); 
+            
         } catch (Exception e) {
             throw new RuntimeException("Error consuming messages from Kafka", e);
         }
@@ -78,7 +83,7 @@ public class KafkaHandler {
 
     public <T> T parseJson(String jsonMessage, Class<T> clazz) {
         try {
-            return objectMapper.readValue(jsonMessage, clazz);
+            return this.objectMapper.readValue(jsonMessage, clazz);
         } catch (Exception e) {
             throw new RuntimeException("Error parsing JSON message", e);
         }
@@ -90,10 +95,10 @@ public class KafkaHandler {
 
     public void close() {
         if (producer != null) {
-            producer.close();
+            this.producer.close();
         }
         if (consumer != null) {
-            consumer.close();
+            this.consumer.close();
         }
     }
 }

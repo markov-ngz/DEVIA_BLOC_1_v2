@@ -2,26 +2,37 @@ package com.devia;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.devia.KafkaHandler;
 import java.time.Duration;
 /**
  * Hello world!
  */
 public class App {
+
+    private static final Logger Logger = LogManager.getLogger(App.class);
     public static void main(String[] args) {
+
+    System.setProperty("log4j.configurationFile","./log4j2.xml");
     // Initialize the handler
     KafkaHandler handler = new KafkaHandler();
-    handler.setProperties("localhost:9092", "my-group-id");
+    handler.setProperties("localhost:9092", "example");
 
     // Consuming messages
-    String topic_name = "connector.public.translation"; 
-    ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofMillis(100));
+    String topic_name = "connector.public.translations"; 
+    ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofSeconds(10));
     for (ConsumerRecord<String, String> record : records) {
-        System.out.println(record);
-        DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
-        System.out.println(obj.getPayload());
-        // Process the object
+
+        try {
+            DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
+            System.out.println(obj.getPayload().getAfter().getFrench());
+        } catch (Exception e) {
+            Logger.error(e);
+            handler.close();
+
+        }
+
     }
 
     // // Publishing messages
