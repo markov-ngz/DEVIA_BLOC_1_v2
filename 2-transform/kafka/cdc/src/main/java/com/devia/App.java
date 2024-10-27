@@ -14,13 +14,13 @@ public class App {
     KafkaHandler handler = new KafkaHandler();
     handler.setProperties("localhost:9092", "my-group-id");
 
-
-
     // Consuming messages
-    ConsumerRecords<String, String> records = handler.consume("my-topic", Duration.ofMillis(100));
+    String topic_name = "connector.public.translation"; 
+    ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofMillis(100));
     for (ConsumerRecord<String, String> record : records) {
         System.out.println(record);
         DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
+        System.out.println(obj.getPayload());
         // Process the object
     }
 

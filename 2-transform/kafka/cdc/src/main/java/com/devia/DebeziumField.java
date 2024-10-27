@@ -9,7 +9,7 @@ class Field {
     private String field;
     private List<Field> fields;
     private String version;
-    private Parameters parameters;
+    private DebeziumParameters parameters;
     @JsonProperty("default")
     private String defaultValue;
 
@@ -26,8 +26,8 @@ class Field {
     public void setFields(List<Field> fields) { this.fields = fields; }
     public String getVersion() { return version; }
     public void setVersion(String version) { this.version = version; }
-    public Parameters getParameters() { return parameters; }
-    public void setParameters(Parameters parameters) { this.parameters = parameters; }
+    public DebeziumParameters getParameters() { return parameters; }
+    public void setParameters(DebeziumParameters parameters) { this.parameters = parameters; }
     public String getDefaultValue() { return defaultValue; }
     public void setDefaultValue(String defaultValue) { this.defaultValue = defaultValue; }
 }
