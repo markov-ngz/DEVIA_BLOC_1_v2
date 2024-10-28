@@ -14,51 +14,46 @@ import java.time.Duration;
 public class App {
 
     private static final Logger Logger = LogManager.getLogger(App.class);
-    public static void main(String[] args) throws Exception{
 
+    public static void main(String[] args){
+        
     System.setProperty("log4j.configurationFile","./log4j2.xml");
 
-    
+    /// 0. Configuration
+    String topic_name = "connector.public.translations"; 
 
-    TranslationValue value = new TranslationValue();
-    value.setFrench("J'habite à Paris");
-    value.setPolish("Mieszkam w Paris");
+    KafkaHandler handler = new KafkaHandler();
 
-    Translation final_translation = new Translation(value.getFrench(), value.getPolish()) ;
+    handler.setProperties("localhost:9092", "example");
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    // 1. Get records from Topic 
+    ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofSeconds(10));
 
-    String translation_json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(final_translation);
+    // 2. Format the read records to the one expected
+    for (ConsumerRecord<String, String> record : records) {
+        try {
+            // 2.1 Deserialiase Json Record
+            DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
 
-    Logger.info(translation_json);
-    // Initialize the handler
-    // KafkaHandler handler = new KafkaHandler();
-    // handler.setProperties("localhost:9092", "example");
+            // 2.2 Get the value of the new data inserted 
+            TranslationValue value = obj.getPayload().getAfter();
 
-    // // Consuming messages
-    // String topic_name = "connector.public.translations"; 
-    // ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofSeconds(10));
-    // for (ConsumerRecord<String, String> record : records) {
+            // 2.3 Map it to the expected the format
+            Translation final_translation = new Translation(value.getFrench(), value.getPolish()) ;
 
-    //     try {
-    //         DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
-    //         System.out.println(obj.getPayload().getAfter().getFrench());
-    //     } catch (Exception e) {
-    //         Logger.error(e);
-    //         handler.close();
+            // 2.4 Publish the serialized object to a topic 
+            handler.publish("translations.frpl", "key2", final_translation);
+            
+            Logger.info(final_translation.to_json());
 
-    //     }
-
-    // }
-
-    // // // Publishing messages
-    // // handler.publish("my-topic", "key1", "Hello World");
-
-    // // // Publishing objects
-    // // TranslationPayload myObject = new TranslationPayload();
-    // // handler.publish("my-topic", "key2", myObject);
-    // // Clean up
-    // handler.close();
+        } catch (Exception e) {
+            Logger.error(e);
+        }
     }
+    
+    handler.close();
+
+    }
+
 
 }
