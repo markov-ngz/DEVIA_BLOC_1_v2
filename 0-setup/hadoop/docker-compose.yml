@@ -1,0 +1,59 @@
+version: 3
+
+services:
+
+  namenode:
+    image: apache/hadoop:3.3.5
+    container_name: namenode
+    ports:
+      - 127.0.0.1:9870:9870
+    env_file:
+      - ./config
+    environment:
+      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    command: ["hdfs","namenode"]
+    networks:
+      hadoop:
+      
+  datanode1:
+    image: apache/hadoop:3.3.5
+    container_name: datanode1
+    env_file:
+      - ./config
+    command: ["hdfs","datanode"]
+    networks:
+      hadoop:
+
+  datanode2:
+    image: apache/hadoop:3.3.5
+    container_name: datanode2
+    env_file:
+      - ./config
+    command: ["hdfs","datanode"]
+    networks:
+      hadoop:
+
+  resourcemanager:
+    image: apache/hadoop:3.3.5
+    container_name: resourcemanager
+    ports:
+      - 127.0.0.1:8088:8088
+    env_file:
+      - ./config
+    command: ["yarn","resourcemanager"]
+    networks:
+      hadoop:
+
+  nodemanager:
+    image: apache/hadoop:3.3.5
+    container_name: nodemanager
+    env_file:
+      - ./config
+    command: ["yarn","nodemanager"]
+    networks:
+      hadoop:
+
+networks:
+  hadoop:
+    name: hadoop
+    external: true
