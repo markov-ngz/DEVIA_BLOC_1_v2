@@ -2,19 +2,25 @@
 - Brokers :
 ```
 # Create a topic  
-./bin/kafka-topics.sh --create --bootstrap-server broker1:9092 --topic <topic_name> --replication-factor 3
+./bin/kafka-topics.sh --create --bootstrap-server broker1:29092 --topic <topic_name> --replication-factor 3 --partitions 1
 
 # Describe topic 
-./bin/kafka-topics.sh --describe --bootstrap-server broker1:9092 --topic <topic_name>
+./bin/kafka-topics.sh --describe --bootstrap-server broker1:29092 --topic <topic_name>
 
-# Product into a topic 
-./bin/kafka-console-producer.sh --topic <topic_name> --bootstrap-server broker1:9092
+# Produce into a topic 
+./bin/kafka-console-producer.sh --topic <topic_name> --bootstrap-server broker1:29092
 
 # Consum into a topic 
-./bin/kafka-console-consumer.sh  --topic <topic_name> --bootstrap-server broker1:9092 --consumer-property group.id=<group_name>
+./bin/kafka-console-consumer.sh  --topic <topic_name> --bootstrap-server broker1:29092 --consumer-property group.id=<group_name>
+
+# Delete Topic 
+./kafka-topics.sh --delete --bootstrap-server broker1:29092 --topic <topic_name>
+
+# Create Group
+./bin/kafka-consumer-groups.sh --bootstrap-server broker1:29092 --group <group_name> --list
 
 # List consumer group state
-./bin/kafka-consumer-groups.sh --bootstrap-server broker1:9092 --group <group_name> --describe
+./bin/kafka-consumer-groups.sh --bootstrap-server broker1:29092 --group <group_name> --describe
 ```
 - Zookeeper : 
 ```

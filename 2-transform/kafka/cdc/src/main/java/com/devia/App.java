@@ -23,15 +23,15 @@ public class App {
 
     KafkaHandler handler = new KafkaHandler();
 
-    handler.setProperties("localhost:9092", "example");
+    handler.setProperties("127.0.0.1:9092", "mygroup");
 
-    // handler.publish("translations.frpl", "key2", "does not seem to work").get() ; 
+    handler.publish("translations.raw.frpl", "does not seem to work", "does not seem to work") ; 
 
-    ConsumerRecords<String, String> records = handler.consume("translations.frpl", Duration.ofSeconds(10));
-    for (ConsumerRecord<String, String> record : records) {
-        System.out.println("Record :");
-        System.out.println(record);
-    }
+    // ConsumerRecords<String, String> records = handler.consume("translations.raw.frpl", Duration.ofSeconds(2));
+    // for (ConsumerRecord<String, String> record : records) {
+    //     System.out.println("Record :");
+    //     System.out.println(record.value());
+    // }
 
     // // 1. Get records from Topic 
     // ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofSeconds(10));
