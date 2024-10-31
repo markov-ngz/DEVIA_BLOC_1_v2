@@ -15,8 +15,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
+    <exec.mainClass>com.devia.App</exec.mainClass>
   </properties>
 
   <dependencies>
@@ -24,6 +24,46 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
+    </dependency>
+          <!-- Apache Kafka dependencies -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>3.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.24.0</version>
+    </dependency>
+      <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+    <!-- Logging implementation (Log4j Core) -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <scope>runtime</scope>
+      <version>2.24.0</version>
+    </dependency>
+    <!-- Log4j JSON-encoding support -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-layout-template-json</artifactId>
+      <scope>runtime</scope>
+      <version>2.24.0</version>
     </dependency>
   </dependencies>
 

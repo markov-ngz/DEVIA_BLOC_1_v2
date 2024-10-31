@@ -6,19 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
-import java.util.concurrent.Future;
-
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.DescribeClusterResult;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.KafkaFuture;
-import org.apache.kafka.common.internals.Topic;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
 
 /**
  * Hello world!
@@ -28,7 +15,8 @@ public class App {
     private static final Logger Logger = LogManager.getLogger(App.class);
 
     public static void main(String[] args) throws Exception{
-
+        
+        System.setProperty("log4j.configurationFile","./log4j2.xml");
         // 0. Setup 
         KafkaHandler handler = new KafkaHandler() ; 
         handler.setProperties("127.0.0.1:9092", "mygroup");
