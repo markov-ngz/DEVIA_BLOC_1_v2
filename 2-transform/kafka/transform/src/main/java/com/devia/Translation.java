@@ -14,6 +14,19 @@ public class Translation {
 
     private Long ts_ms ; 
 
+    private String source_value ; 
+
+    private String source_type ; 
+
+
+    public String getSource_type(){
+        return this.source_type ; 
+    }
+
+    public String getSource_value(){
+        return this.source_value ; 
+    }
+
     public Long getTs_ms(){
         return this.ts_ms ; 
     }
@@ -29,6 +42,14 @@ public class Translation {
     }
     public String getLang_source(){
         return this.lang_source ; 
+    }
+
+    public void setSource_type(String source_type){
+        this.source_type = source_type ; 
+    }
+
+    public void setSource_value(String source_value){
+        this.source_value = source_value ; 
     }
 
     public void setTs_ms(Long ts_ms){

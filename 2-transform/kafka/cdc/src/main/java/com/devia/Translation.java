@@ -14,17 +14,33 @@ public class Translation {
 
     private Long ts_ms ; 
 
+    private String source_type ;
+
+    private String source_value ; 
+
     private final ObjectMapper objectMapper;
 
-    public Translation(String text_source, String text_target, Long ts_ms){
+    public Translation(String text_source, String text_target, Long ts_ms, String source_value){
+        
         this.text_source = text_source ; 
         this.text_target = text_target ; 
         this.ts_ms = ts_ms ; 
+        this.source_type = "database" ; 
+        this.source_value = source_value ; 
+
         this.objectMapper = new ObjectMapper();
+
     }
 
     public Long getTs_ms(){
         return this.ts_ms ; 
+    }
+    public String getSource_type(){
+        return this.source_type ; 
+    }
+
+    public String getSource_value(){
+        return this.source_value ; 
     }
 
     public String getText_source(){

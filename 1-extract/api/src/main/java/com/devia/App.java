@@ -57,7 +57,7 @@ public class App {
             TranslationResponse[] translated_texts = objectMapper.readValue(body, TranslationResponse[].class);
             
             // 1.4 Instantiate the Translation object to write to the topic 
-            Translation final_translation = new Translation(translation_payload.getInputs(), translated_texts[0].getTranslation_text());
+            Translation final_translation = new Translation(translation_payload.getInputs(), translated_texts[0].getTranslation_text(), url);
 
             // 1.5 Serialiaze the translation to Json 
             String translation_json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(final_translation);

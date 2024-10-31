@@ -37,8 +37,16 @@ public class App {
 
                 Logger.info(value.getFrench());
 
+                DebeziumSource source  = obj.getPayload().getSource() ; 
+                
+                String source_value = source.getDb() + "." + source.getSchema() + "." + source.getTable()  ;
+
                 // 2.3 Map it to the expected the format
-                Translation final_translation = new Translation(value.getFrench(), value.getPolish(), obj.getPayload().getTsMs()) ;
+                Translation final_translation = new Translation(
+                                                    value.getFrench(), 
+                                                    value.getPolish(), 
+                                                    obj.getPayload().getTsMs(),
+                                                    source_value) ;
 
                 // 2.4 Publish the serialized object to a topic 
                 handler.publish(target_topic, "key2", final_translation).get();

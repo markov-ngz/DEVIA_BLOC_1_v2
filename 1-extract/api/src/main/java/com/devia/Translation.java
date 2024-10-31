@@ -12,10 +12,24 @@ public class Translation {
 
     private Long ts_ms ; 
 
-    public Translation(String text_source, String text_target ){
+    private String source_type ;
+
+    private String source_value ; 
+
+    public Translation(String text_source, String text_target, String URL ){
         this.text_source = text_source ; 
         this.text_target = text_target ; 
         this.ts_ms = System.currentTimeMillis() % 1000;
+        this.source_type = "API" ; 
+        this.source_value = URL ; 
+    }
+
+    public String getSource_type(){
+        return this.source_type ; 
+    }
+
+    public String getSource_value(){
+        return this.source_value ; 
     }
 
     public Long getTs_ms(){
