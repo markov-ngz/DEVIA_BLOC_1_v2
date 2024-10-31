@@ -12,13 +12,19 @@ public class Translation {
 
     private String lang_target = "pl" ; 
 
+    private Long ts_ms ; 
+
     private final ObjectMapper objectMapper;
 
-    public Translation(String text_source, String text_target ){
+    public Translation(String text_source, String text_target, Long ts_ms){
         this.text_source = text_source ; 
         this.text_target = text_target ; 
-
+        this.ts_ms = ts_ms ; 
         this.objectMapper = new ObjectMapper();
+    }
+
+    public Long getTs_ms(){
+        return this.ts_ms ; 
     }
 
     public String getText_source(){

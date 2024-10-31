@@ -8,11 +8,15 @@ public class Translation {
 
     private String text_target ; 
 
-    private String lang_source = "fr" ; 
+    private String lang_source  ; 
 
-    private String lang_target = "pl" ; 
+    private String lang_target ; 
 
+    private Long ts_ms ; 
 
+    public Long getTs_ms(){
+        return this.ts_ms ; 
+    }
 
     public String getText_source(){
         return this.text_source ; 
@@ -25,6 +29,10 @@ public class Translation {
     }
     public String getLang_source(){
         return this.lang_source ; 
+    }
+
+    public void setTs_ms(Long ts_ms){
+        this.ts_ms = ts_ms ; 
     }
 
     public void setText_source(String text_source){

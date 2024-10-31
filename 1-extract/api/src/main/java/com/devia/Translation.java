@@ -1,5 +1,6 @@
 package com.devia;
 
+
 public class Translation {
     private String text_source  ; 
 
@@ -9,9 +10,16 @@ public class Translation {
 
     private String lang_target = "pl" ; 
 
+    private Long ts_ms ; 
+
     public Translation(String text_source, String text_target ){
         this.text_source = text_source ; 
         this.text_target = text_target ; 
+        this.ts_ms = System.currentTimeMillis() % 1000;
+    }
+
+    public Long getTs_ms(){
+        return this.ts_ms ; 
     }
 
     public String getText_source(){

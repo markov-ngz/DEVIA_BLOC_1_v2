@@ -38,7 +38,7 @@ public class App {
                 Logger.info(value.getFrench());
 
                 // 2.3 Map it to the expected the format
-                Translation final_translation = new Translation(value.getFrench(), value.getPolish()) ;
+                Translation final_translation = new Translation(value.getFrench(), value.getPolish(), obj.getPayload().getTsMs()) ;
 
                 // 2.4 Publish the serialized object to a topic 
                 handler.publish(target_topic, "key2", final_translation).get();
