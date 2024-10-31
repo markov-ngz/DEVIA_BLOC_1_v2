@@ -14,7 +14,7 @@
 ./bin/kafka-console-consumer.sh  --topic <topic_name> --bootstrap-server broker1:29092 --consumer-property group.id=<group_name>
 
 # Delete Topic 
-./kafka-topics.sh --delete --bootstrap-server broker1:29092 --topic <topic_name>
+./bin/kafka-topics.sh --delete --bootstrap-server broker1:29092 --topic <topic_name>
 
 # Create Group
 ./bin/kafka-consumer-groups.sh --bootstrap-server broker1:29092 --group <group_name> --list

@@ -37,6 +37,10 @@ public class KafkaHandler {
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         producerProps.put(ProducerConfig.ACKS_CONFIG, "all");
         producerProps.put(ProducerConfig.RETRIES_CONFIG, 3);
+        producerProps.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG,5000); 
+        producerProps.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG,10000); 
+        producerProps.put(ProducerConfig.LINGER_MS_CONFIG,1);
+
 
         // Consumer properties
         consumerProps = new Properties();

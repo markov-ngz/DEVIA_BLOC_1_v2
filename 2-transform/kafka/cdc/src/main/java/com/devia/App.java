@@ -7,6 +7,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.util.concurrent.Future;
+
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.DescribeClusterResult;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.KafkaFuture;
+import org.apache.kafka.common.internals.Topic;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Properties;
+
 /**
  * Hello world!
  */
@@ -15,54 +28,40 @@ public class App {
     private static final Logger Logger = LogManager.getLogger(App.class);
 
     public static void main(String[] args) throws Exception{
-        
-    System.setProperty("log4j.configurationFile","./log4j2.xml");
 
-    /// 0. Configuration
-    String topic_name = "connector.public.translations"; 
+        // 0. Setup 
+        KafkaHandler handler = new KafkaHandler() ; 
+        handler.setProperties("127.0.0.1:9092", "mygroup");
+        String debezium_topic = "connector.public.translations"  ; 
+        String target_topic  = "translations.raw.frpl" ;
 
-    KafkaHandler handler = new KafkaHandler();
+        // 1. Get records from Topic 
+        ConsumerRecords<String, String> records = handler.consume(debezium_topic, Duration.ofSeconds(10));
 
-    handler.setProperties("127.0.0.1:9092", "mygroup");
+        // 2. Format the read records to the one expected
+        for (ConsumerRecord<String, String> record : records) {
+            try {
+                // 2.1 Deserialiase Json Record
+                DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
 
-    handler.publish("translations.raw.frpl", "does not seem to work", "does not seem to work") ; 
+                // 2.2 Get the value of the new data inserted 
+                TranslationValue value = obj.getPayload().getAfter();
 
-    // ConsumerRecords<String, String> records = handler.consume("translations.raw.frpl", Duration.ofSeconds(2));
-    // for (ConsumerRecord<String, String> record : records) {
-    //     System.out.println("Record :");
-    //     System.out.println(record.value());
-    // }
+                Logger.info(value.getFrench());
 
-    // // 1. Get records from Topic 
-    // ConsumerRecords<String, String> records = handler.consume(topic_name, Duration.ofSeconds(10));
+                // 2.3 Map it to the expected the format
+                Translation final_translation = new Translation(value.getFrench(), value.getPolish()) ;
 
-    // // 2. Format the read records to the one expected
-    // for (ConsumerRecord<String, String> record : records) {
-    //     try {
-    //         // 2.1 Deserialiase Json Record
-    //         DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
+                // 2.4 Publish the serialized object to a topic 
+                handler.publish(target_topic, "key2", final_translation).get();
+                
+                Logger.info(final_translation.to_json());
 
-    //         // 2.2 Get the value of the new data inserted 
-    //         TranslationValue value = obj.getPayload().getAfter();
-
-
-    //         // 2.3 Map it to the expected the format
-    //         Translation final_translation = new Translation(value.getFrench(), value.getPolish()) ;
-
-    //         // 2.4 Publish the serialized object to a topic 
-    //         handler.publish("translations.frpl", "key2", final_translation);
-            
-    //         Logger.info(final_translation.to_json());
-
-    //     } catch (Exception e) {
-    //         Logger.error(e);
-    //         throw e ;
-    //     }
-    // }
-    
-    handler.close();
-
+            } catch (Exception e) {
+                Logger.error(e);
+                throw e ;
+            } 
+        }
+        handler.close();
     }
-
-
 }
