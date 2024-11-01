@@ -1,7 +1,9 @@
 package com.devia;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,10 +13,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import com.devia.KafkaHandler;
 import com.devia.Translation;
-/**
- * Hello world!
- *
- */
+
+
 public class App
 {
     private static final Logger Logger = LogManager.getLogger(App.class);
@@ -38,7 +38,7 @@ public class App
             Translation translation = handler.parseJson(record, Translation.class) ; 
             
             try {
-                Translation cleanTranslation = transform(translation) ; 
+                CleanTranslation cleanTranslation = transform(translation) ; 
                 handler.publish(clean_topic, "key", cleanTranslation) ; 
                 count_publish += 1 ; 
             } catch (Exception e) {
@@ -52,20 +52,30 @@ public class App
         handler.close() ; 
     }
 
-    private static Translation transform(Translation translation) throws Exception {
+    private static CleanTranslation transform(Translation translation) throws Exception {
 
+        CleanTranslation cleanTranslation = new CleanTranslation() ; 
+        
         // 1. Extract text value fields 
         String text_source = translation.getText_source() ; 
         String text_target = translation.getText_target() ;
+        Long ts = translation.getTs_ms() ; 
         
-        // 2. Clean for 
+        // 2. Clean 
         String clean_text_source = clean(text_source);
-        String clean_text_target = clean(text_target) ; 
+        String clean_text_target = clean(text_target) ;
+        String extracted_at = transformTimestamp(ts) ; 
 
-        translation.setText_source(clean_text_source);
-        translation.setText_target(clean_text_target);
 
-        return translation ; 
+        cleanTranslation.setText_source(clean_text_source);
+        cleanTranslation.setText_target(clean_text_target);
+        cleanTranslation.setExtractedAt(extracted_at);
+        cleanTranslation.setLang_source(translation.getLang_source());
+        cleanTranslation.setLang_target(translation.getLang_target());
+        cleanTranslation.setSource_type(translation.getSource_type());
+        cleanTranslation.setSource_value(translation.getSource_value()); 
+
+        return cleanTranslation ; 
 
     }
 
@@ -83,6 +93,19 @@ public class App
             text = text.replace(character,replacement ) ;
         } 
 
+
         return text ; 
+    }
+    private static String transformTimestamp(Long timestamp){
+        
+        Date date = new Date(timestamp);
+        
+        // Create a SimpleDateFormat instance with the desired format
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // Format the date using the formatter
+        String formattedDate = formatter.format(date);
+
+        return formattedDate ; 
     }
 }
