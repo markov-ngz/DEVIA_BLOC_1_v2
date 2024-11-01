@@ -7,8 +7,16 @@ services:
     env_file:
       - .env
     volumes:
-      - cdc-data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d
+      - target-data:/var/lib/postgresql/data
+      # - ./init:/docker-entrypoint-initdb.d
+    networks:
+      kafka:
+
 volumes:
   target-data:
     name: "target_db"
+
+networks:
+  kafka:
+    name: kafka
+    external: true
