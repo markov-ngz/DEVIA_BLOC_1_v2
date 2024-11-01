@@ -11,6 +11,5 @@ INSERT INTO public.source (type, name) VALUES (<>,<>) ON CONFLICT DO NOTHING RET
 SELECT id FROM public.source WHERE type = <> AND name = <> ;
 
 -- 3. Translation
-INSERT INTO public.translations(text_origin, text_target, extracted_at ,languages_id, source_id)
-VALUES (<>,<>,<>,<languages.id>,<source.id>) ON CONFLICT DO NOTHING ; 
+INSERT INTO public.translations(text_origin, text_target, extracted_at ,languages_id, source_id) VALUES (<>,<>,<>,<languages.id>,<source.id>) ON CONFLICT DO NOTHING ; 
 
