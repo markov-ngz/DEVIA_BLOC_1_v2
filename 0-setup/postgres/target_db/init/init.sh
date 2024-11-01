@@ -38,6 +38,15 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
             NOT VALID
     );
 
+    ALTER TABLE public.translations
+    ADD CONSTRAINT unique_constraint_name UNIQUE (text_origin, text_target, languages_id);
+
+    ALTER TABLE public.languages
+    ADD CONSTRAINT unique_constraint_language UNIQUE (lang_origin, lang_target);
+
+    ALTER TABLE public.source
+    ADD CONSTRAINT unique_constraint_source UNIQUE (type, name);
+
     CREATE OR REPLACE VIEW translation_view
     AS
     SELECT DISTINCT
