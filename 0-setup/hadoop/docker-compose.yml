@@ -1,4 +1,4 @@
-version: 3
+version: "2"
 
 services:
 
@@ -24,14 +24,14 @@ services:
     networks:
       hadoop:
 
-  datanode2:
-    image: apache/hadoop:3.3.5
-    container_name: datanode2
-    env_file:
-      - ./config
-    command: ["hdfs","datanode"]
-    networks:
-      hadoop:
+  # datanode2:
+  #   image: apache/hadoop:3.3.5
+  #   container_name: datanode2
+  #   env_file:
+  #     - ./config
+  #   command: ["hdfs","datanode"]
+  #   networks:
+  #     hadoop:
 
   resourcemanager:
     image: apache/hadoop:3.3.5
