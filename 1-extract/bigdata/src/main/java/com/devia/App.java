@@ -13,11 +13,21 @@ public class App
 {
     public static void main( String[] args )
     {
+        // keyspace name used 
         String keyspace = "translations";
+
+        // CQL query used 
+        String query = "select * from pl_fr" ;
+        
+        // Build session to the keyspace hosted by the cluster  
         try (CqlSession session = CqlSession.builder().withKeyspace(CqlIdentifier.fromCql(keyspace)).build()) { 
-            ResultSet rs = session.execute("select * from pl_fr");  
-            List<Translation> translations =new ArrayList<Translation>();
+            
+            // Retrieve data by executing the query 
+            ResultSet rs = session.execute(query);  
+
+            // Map the data to an object 
             PagingIterable<Translation> pi = rs.map(result -> mapTranslation(result)) ; 
+            
             System.out.println(pi.one().getSrc_text()) ;
         }
     }
