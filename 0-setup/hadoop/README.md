@@ -16,6 +16,9 @@ YARN (Yet Another Resource Manager):
 <img src="" />
 
 ## Configuration
+Documentation links :
+- HDFS Ports : https://ambari.apache.org/1.2.4/installing-hadoop-using-ambari/content/reference_chap2_1.html 
+- Full reference : https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
 Description about the environment variable used
 ```
 HADOOP_HOME=/opt/hadoop

@@ -3,8 +3,8 @@ services:
     image: apache/hadoop:3.3.5
     container_name: namenode
     ports:
-      - 127.0.0.1:9870:9870
-      - 127.0.0.1:9000:9000
+      - 127.0.0.1:9870:9870 # namenode web cli interface 
+      - 127.0.0.1:9000:9000 # port to commit jobs 
     env_file:
       - ./config
     environment:
