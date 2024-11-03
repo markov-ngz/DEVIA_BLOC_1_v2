@@ -4,5 +4,9 @@ Reference : https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-co
 ## Commands
 List Files in a given directory
 ```
-hadoop fs -ls <dir>
+hadoop fs -ls /<dir>
+```
+Copy a file 
+```
+hdfs dfs -put <file> /path/<file>
 ```

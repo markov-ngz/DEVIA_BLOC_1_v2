@@ -15,6 +15,16 @@ YARN (Yet Another Resource Manager):
 ## Schema
 <img src="" />
 
+## Setup 
+Run local cluster 
+```
+docker compose up -d
+```
+By default the host user is not authorized to perform file operation to the cluster as it is not auth and kerberos is also not set up :
+Hence for development purpose , the ugly trick is done :  
+```
+docker exec namenode hdfs dfs -chown <host_user>:hadoop /
+```
 ## Configuration
 Documentation links :
 - HDFS Ports : https://ambari.apache.org/1.2.4/installing-hadoop-using-ambari/content/reference_chap2_1.html 
