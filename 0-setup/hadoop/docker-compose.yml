@@ -5,6 +5,7 @@ services:
     ports:
       - 127.0.0.1:9870:9870 # namenode web cli interface 
       - 127.0.0.1:9000:9000 # port to commit jobs 
+      - 127.0.0.1:8020:8020 # port to commit jobs 
     env_file:
       - ./config
     environment:
