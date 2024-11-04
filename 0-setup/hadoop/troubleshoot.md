@@ -10,3 +10,11 @@ Copy a file
 ```
 hdfs dfs -put <file> /path/<file>
 ```
+List block devices
+```
+lsblk
+```
+Get Informations about a file 
+```
+hdfs fsck /user/hello.txt -files -blocks -locations
+```
