@@ -1,4 +1,5 @@
 HADOOP_HOME=/opt/hadoop
+CORE-SITE.XML_dfs.datanode.address=hdfs://namenode:9866
 CORE-SITE.XML_fs.defaultFS=hdfs://namenode:8020
 HDFS-SITE.XML_dfs.namenode.rpc-address=namenode:8020
 HDFS-SITE.XML_dfs.replication=1
