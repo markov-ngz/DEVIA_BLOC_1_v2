@@ -6,9 +6,7 @@ services:
       - 127.0.0.1:9870:9870 # namenode web cli interface 
       - 127.0.0.1:9000:9000 # port to commit jobs 
       - 127.0.0.1:8020:8020 # port to commit jobs 
-      - 127.0.0.1:9864:9864 # webUI
-      - 127.0.0.1:9867:9867 # ipc communication
-      - 127.0.0.1:9866:9866 # data Transfer
+
     env_file:
       - ./config
     environment:
@@ -17,19 +15,19 @@ services:
     networks:
       hadoop:
       
-  # datanode1:
-  #   image: apache/hadoop:3.3.5
-  #   container_name: datanode1
-  #   env_file:
-  #     - ./config
-  #   command: ["hdfs","datanode"]
-  #   ports:
-  #     - 127.0.0.1:9864:9864 # webUI
-  #     - 127.0.0.1:9867:9867 # ipc communication
-  #     - 127.0.0.1:9866:9866 # data Transfer
-  #     - 127.0.0.1:50010:50010 # data Transfer
-  #   networks:
-  #     hadoop:
+  datanode1:
+    image: apache/hadoop:3.3.5
+    container_name: datanode1
+    env_file:
+      - ./config
+    command: ["hdfs","datanode"]
+    ports:
+      - 127.0.0.1:9864:9864 # webUI
+      - 127.0.0.1:9867:9867 # ipc communication
+      - 127.0.0.1:9866:9866 # data Transfer
+      - 127.0.0.1:8021:8020 # port to commit jobs 
+    networks:
+      hadoop:
 
   # datanode2:
   #   image: apache/hadoop:3.3.5
