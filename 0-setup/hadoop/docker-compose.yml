@@ -25,6 +25,7 @@ services:
       - 127.0.0.1:9864:9864 # webUI
       - 127.0.0.1:9867:9867 # ipc communication
       - 127.0.0.1:9866:9866 # data Transfer
+      - 127.0.0.1:8021:8020 # port to commit jobs 
     networks:
       hadoop:
 
