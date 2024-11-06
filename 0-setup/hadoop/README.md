@@ -1,5 +1,13 @@
 # Hadoop Cluster
 Local Setup of an Hadoop Cluster.
+<ul>
+<li>For single node cluster setup see file : <b>hadoop_setup.pdf</b></li>
+<li>As a nexample of Spark application that can be used  : <b>bigdata_doc.pdf</b></li>
+</ul>
+
+<br>
+The following covers a conteneurized simulation of a hadoop cluster with docker . 
+
 ## Containers 
 HDFS (Hadoop Distributed File System):
 <ul>
