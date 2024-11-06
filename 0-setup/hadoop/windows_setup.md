@@ -12,6 +12,24 @@ This assume you have Java Installed which can be invoked by the commansd ```java
 5. For user , add a new variable JAVA_HOME to the user's : ```C:\Progra~1\Java\jdk-<javaver>``` ( a bug occures on windows for Program Files folder because the folder contains a space , hence you need to add ~1 )
 
 ## Hadoop Configuration
-
+1. Add the following to etc/core-site.xml
+```
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+</configuration>
+```
+2. Add the following to etc/hdfs-site.xml
+```
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+</configuration>
+```
+3. BLOCKED as no binaries are available or compiling is such an ass zzz
 ## Reference
 - Windows Install : https://medium.com/@rebaimaha/guide-complet-pour-d%C3%A9buter-avec-pyspark-et-hadoop-sur-windows-1d17635dbcee
