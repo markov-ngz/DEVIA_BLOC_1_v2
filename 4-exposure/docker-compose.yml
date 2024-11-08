@@ -1,0 +1,15 @@
+services:
+  db_spring:
+    container_name: db_spring
+    image: postgres:12-alpine
+    ports:
+      - 127.0.0.1:6432:5432
+    environment:
+      POSTGRES_PASSWORD: raditz
+      POSTGRES_USER: kakarott
+      POSTGRES_DB: DBZ
+    volumes:
+      - db_spring:/var/lib/postgresql/data
+volumes:
+  db_spring:
+    name: "db_spring"
