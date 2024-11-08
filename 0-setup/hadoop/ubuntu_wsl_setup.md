@@ -65,7 +65,9 @@ bin/hdfs namenode -format
 # 3. Authorization
 If you run scripts on windows, the user will differ from the WSL's root.
 Hence you need to allow your user to hadoop's group
-<SUITE ICI>
+```
+hdfs dfs -chmod 777 /
+```
 # 4. Run 
 7. run hadoop 
 ```
