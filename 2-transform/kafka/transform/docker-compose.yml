@@ -1,7 +1,7 @@
 services:
   api:
-    container_name: etl_api
-    image: markreduce/etl:api
+    container_name: etl_kafka_transform
+    image: markreduce/etl:kafkatransform
     env_file:
       - .env
     networks:
