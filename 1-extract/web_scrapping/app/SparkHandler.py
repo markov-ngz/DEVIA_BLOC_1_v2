@@ -1,4 +1,4 @@
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession , DataFrame 
 from abc import ABC
 
 class SparkHandler() : 
@@ -8,8 +8,12 @@ class SparkHandler() :
     def write(self)->None:
         pass 
     
-    def read(self)->None:
-        pass
+    def read(self,path:str)->DataFrame:
+        try:
+            return self.spark.read.text(path)
+        except Exception as e :
+            raise e 
+        
 
     def delete(self)->None:
         pass 
