@@ -1,7 +1,9 @@
 """Parse the HTML"""
 from bs4 import BeautifulSoup
-import pandas as pd
+# import pandas as pd
 from datetime import datetime
+from pyspark.sql import  DataFrame 
+from SparkHandler import SparkHandler
 import os 
 import logging
 
@@ -17,18 +19,36 @@ logger = logging.getLogger(__name__)
 
 class HTMLParser():
 
-    @staticmethod
-    def parse_html(html:str,from_url:str)->pd.DataFrame:
+                    
+    def get_traductions(self, html:str,from_url:str, spark: SparkHandler )->DataFrame:
         """
         Parse the html of the specific url : 
         "https://fr.wikiversity.org/wiki/Polonais/Vocabulaire/Se_pr%C3%A9senter"
         
         """
-        # container 
-        language_dict = {
-            "text_origin":[],
-            "text_target":[]
-        }
+        # 1. Parse HTML 
+        language_list = self.parse_html(html)
+        
+        # 2. Transform into a Spark.DataFrame 
+        df = spark.session.createDataFrame(language_list,schema = ["text_origin","text_target"])
+        
+        # Add additionnal information 
+        columns  = {
+                "created_at":datetime.now().strftime("%Y-%m-%d"),
+                "source":from_url,
+                "source_type":"scrapping",
+                "lang_origin":"french",
+                "lang_target":"polish"
+                }
+        
+        df_final = spark.set_columns(df, columns)
+
+        
+        return df_final
+    
+    def parse_html(self, html:str)->list:
+                # container 
+        language_list = []
 
         # html soup to parse
         soup  =  BeautifulSoup(html, 'html.parser')
@@ -44,14 +64,7 @@ class HTMLParser():
                 if len(tds) == 2:
                     pl_text = tds[0].text
                     fr_text = tds[1].text
-                    language_dict["text_origin"].append(fr_text)
-                    language_dict["text_target"].append(pl_text)
+                    pair = [pl_text, fr_text]
+                    language_list.append(pair)
 
-        df = pd.DataFrame(language_dict)
-        df["created_at"] = datetime.now().strftime("%Y-%m-%d")
-        df["source"] = from_url
-        df["source_type"] = "scrapping"
-        df["lang_origin"] = "french"
-        df["lang_target"] = "polish"
-        
-        return df
+        return language_list 
