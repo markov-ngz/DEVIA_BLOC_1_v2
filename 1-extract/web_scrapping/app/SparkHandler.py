@@ -1,6 +1,5 @@
 from pyspark.sql import SparkSession , DataFrame 
 from pyspark.sql.functions import lit
-from abc import ABC
 
 class SparkHandler() : 
     def __init__(self, app_name:str )->None : 

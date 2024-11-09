@@ -3,7 +3,6 @@ from html_scrap import HTMLScrapper
 from SparkHandler import SparkHandler 
 import logging
 import os
-from sys import exit 
 
 
 class WebScrapping():

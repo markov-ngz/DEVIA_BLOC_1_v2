@@ -1,6 +1,5 @@
 """Parse the HTML"""
 from bs4 import BeautifulSoup
-# import pandas as pd
 from datetime import datetime
 from pyspark.sql import  DataFrame 
 from SparkHandler import SparkHandler
