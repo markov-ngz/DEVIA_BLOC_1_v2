@@ -43,10 +43,7 @@ class WebScrapping():
             raise e 
         finally : 
             spark.session.stop()
-    
-    def setup_env(self)->None :
-        if( os.getenv("PYSPARK_HOME") == None ):
-            os.environ["PYSPARK_HOME"] = "python" 
+
     def setup_logger(self)->None:
         LOG_FILE = os.getenv("LOG_FILE")
 
