@@ -7,11 +7,9 @@ import os
 
 class WebScrapping():
 
-    url = "https://fr.wikiversity.org/wiki/Polonais/Vocabulaire/Se_pr%C3%A9senter"
-    
-    hdfs_url = "hdfs://localhost:9000"
+    url : str = "https://fr.wikiversity.org/wiki/Polonais/Vocabulaire/Se_pr%C3%A9senter" # Hard coded URL as the HTML parsing is specific to this page 
 
-    file_path = "/web_scrapping.csv"
+    environment_variables :list[str] = ["HDFS_URL","FILE_PATH"]
 
     def __init__(self) -> None:
         """
@@ -23,10 +21,10 @@ class WebScrapping():
         """
 
         self.setup_logger()
-        self.setup_env() 
-
+        self.load_config() 
         
         spark = SparkHandler("web-scrapping")
+        
         try: 
             # Get HTML as str 
             html_scrapped = HTMLScrapper.get_content(self.url)
@@ -35,7 +33,7 @@ class WebScrapping():
             raw_df_scrap = HTMLParser().get_traductions(html_scrapped,self.url, spark)
             
             # Write into HDFS 
-            spark.write(raw_df_scrap,self.hdfs_url + self.file_path)
+            spark.write(raw_df_scrap,self.config["HDFS_URL"] + self.config["FILE_PATH"], add_timestamp=True )
             self.logger.info("Successfully writed file to %s"  % self.file_path )
 
         except Exception as e : 
@@ -62,6 +60,11 @@ class WebScrapping():
             with open(LOG_FILE,'a'):
                 self.logger.info("Logs will be written to : %s".format(LOG_FILE))
 
-
+    def load_config(self, env_variables : list[str])->None : 
+        self.config = {k : os.getenv(k) for k in env_variables}
+        for k , v in self.config : 
+            if v == None : 
+                raise Exception("Environment variable %s is not set." % k ) 
+            
 if __name__=='__main__':
     WebScrapping()

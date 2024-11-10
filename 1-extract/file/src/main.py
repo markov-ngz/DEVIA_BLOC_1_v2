@@ -9,9 +9,9 @@ class Main():
 
     app_name = "sftp_file"
 
-    hdfs_url = "hdfs://localhost:9000"
+    hdfs_url : str 
 
-    file_path = "/sftp.csv"
+    file_path : str 
 
     def __init__(self) -> None:
         """
@@ -40,15 +40,17 @@ class Main():
         df_final = self.add_columns(spark_df)
 
         # 7. Write the file 
-        self.spark.write(df_final,self.hdfs_url + self.file_path)
+        self.spark.write(df_final,self.hdfs_url + self.file_path, add_timestamp= True )
 
     def load_config(self):
         self.key_path = os.getenv("PRIVATE_KEY_PATH")
         self.username= os.getenv("SFTP_USERNAME")
         self.host = os.getenv("SFTP_HOST")
         self.remote_file_path = os.getenv("REMOTE_FILE")
+        self.hdfs_url = os.getenv("HDFS_URL")
+        self.file_path = os.getenv("FILE_PATH")
 
-        for env in [self.key_path , self.username , self.host , self.remote_file_path] :
+        for env in [self.key_path , self.username , self.host , self.remote_file_path, self.hdfs_url , self.file_path] :
             if env == None :
                 msg = "All environment variable aren't set or could not be loaded in [PRIVATE_KEY_PATH , SFTP_USERNAME, SFTP_HOST, REMOTE_FILE], please try again."
                 self.logger.error(msg) 

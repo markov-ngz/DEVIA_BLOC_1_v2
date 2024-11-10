@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class HTMLParser():
 
                     
-    def get_traductions(self, html:str,from_url:str, spark: SparkHandler )->DataFrame:
+    def get_traductions(self, html:str,from_url:str, spark: SparkHandler , lang_origin:str = "french" , lang_target:str="polish")->DataFrame:
         """
         Parse the html of the specific url : 
         "https://fr.wikiversity.org/wiki/Polonais/Vocabulaire/Se_pr%C3%A9senter"
@@ -36,8 +36,8 @@ class HTMLParser():
                 "created_at":datetime.now().strftime("%Y-%m-%d"),
                 "source":from_url,
                 "source_type":"scrapping",
-                "lang_origin":"french",
-                "lang_target":"polish"
+                "lang_origin":lang_origin,
+                "lang_target":lang_target
                 }
         
         df_final = spark.set_columns(df, columns)
