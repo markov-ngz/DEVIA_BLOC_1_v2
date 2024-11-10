@@ -15,7 +15,7 @@ class SparkHandler() :
     def setup_env(self)->None :
         if( os.getenv("PYSPARK_PYTHON") == None ):
             os.environ["PYSPARK_PYTHON"] = "python" 
-            self.logger.warning("Environment Variable PYSPARK_HOME not set. Setting its value as 'python'")
+            self.logger.warning("Environment Variable PYSPARK_PYTHON not set. Setting its value as 'python'")
 
     def write(self,df:DataFrame, path: str , format:str ='tsv',mode:str ='append', add_timestamp : bool = False)->None:
         if add_timestamp : 
@@ -51,5 +51,5 @@ class SparkHandler() :
         now : str  = datetime.now().strftime(format)
         split : list  = path.split("/")
         split[-1] = now +"_"+split[-1]
-        
+
         return '/'.join(split)

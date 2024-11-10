@@ -2,6 +2,7 @@ from pyspark.sql import SparkSession , DataFrame
 from pyspark.sql.functions import lit
 import os 
 from JsonLogger import JsonLogger 
+from datetime import datetime 
 
 class SparkHandler() : 
     def __init__(self, app_name:str )->None : 
@@ -12,11 +13,13 @@ class SparkHandler() :
         self.session = SparkSession.builder.master("local").appName(app_name).getOrCreate()
 
     def setup_env(self)->None :
-        if( os.getenv("PYSPARK_HOME") == None ):
-            os.environ["PYSPARK_HOME"] = "python" 
-            self.logger.warning("Environment Variable PYSPARK_HOME not set. Setting its value as 'python'")
+        if( os.getenv("PYSPARK_PYTHON") == None ):
+            os.environ["PYSPARK_PYTHON"] = "python" 
+            self.logger.warning("Environment Variable PYSPARK_PYTHON not set. Setting its value as 'python'")
 
-    def write(self,df:DataFrame, path: str , format:str ='csv',mode:str ='append')->None:
+    def write(self,df:DataFrame, path: str , format:str ='tsv',mode:str ='append', add_timestamp : bool = False)->None:
+        if add_timestamp : 
+            path = self.add_timestamp(path) 
         try : 
             df.write.save(path,format=format, mode=mode)
         except Exception as e : 
@@ -40,3 +43,13 @@ class SparkHandler() :
         for  k , v  in col.items() : 
             df = df.withColumn(k ,lit(v) )
         return df 
+    
+    def add_timestamp(self, path:str, format="%Y%m%d")->str :
+        """
+        Prefix the name of the file with a timestamp of the given format  
+        """
+        now : str  = datetime.now().strftime(format)
+        split : list  = path.split("/")
+        split[-1] = now +"_"+split[-1]
+
+        return '/'.join(split)
