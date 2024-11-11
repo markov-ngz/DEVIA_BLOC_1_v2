@@ -1,13 +1,26 @@
+from JsonLogger import JsonLogger
+from SparkHandler import SparkHandler 
 
 class Main():
 
     def __init__(self) -> None:
+
         for folder in folders : 
-            for file in files : 
             
-                check col format or format it , on error : log err + continue
+            if folder exists ? :  
+                list files in folder 
+            else :
+                log error 
+                continue 
 
-                apply transformation
+            for file in files : 
+                try : 
+                    check col format or format it , 
 
-                append it to the aggregated file 
-           
+                    apply transformation
+
+                    append it to the aggregated file 
+                except : 
+                    log err 
+                    continue
+            
