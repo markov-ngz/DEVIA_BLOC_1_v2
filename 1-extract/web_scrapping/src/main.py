@@ -26,13 +26,13 @@ class WebScrapping():
         spark = SparkHandler("web-scrapping")
         
         try: 
-            # Get HTML as str 
+            # 1. Get HTML as str 
             html_scrapped = HTMLScrapper.get_content(self.url)
             
-            # Get the translations as a DataFrame 
+            # 2. Get the translations as a spark.DataFrame 
             raw_df_scrap = HTMLParser().get_traductions(html_scrapped,self.url, spark)
             
-            # Write into HDFS 
+            # 3. Write into HDFS 
             spark.write(raw_df_scrap,self.config["HDFS_URL"] + self.config["FILE_PATH"], add_timestamp=True )
             self.logger.info("Successfully writed file to %s"  % self.file_path )
 

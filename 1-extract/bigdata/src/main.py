@@ -11,6 +11,8 @@ class Main():
 
     columns_queried : list[str] = ["target_text" ,"target_lang" , "src_lang" , "src_text" , "created_at"]
 
+    metadata : dict = {"source_type":"bigdata", "source":""}
+
     def __init__(self) -> None:
         """
         Execute a query from a Cassandra No-SQL database and write the data as a CSV to HDFS 
@@ -30,7 +32,8 @@ class Main():
         hdfs_url = self.config["HDFS_URL"]
         file_path = self.config["FILE_PATH"]
         path = hdfs_url + file_path 
-        
+        ## Fill metadata
+        self.metadata["source"] = "{0}.{1}".format(keyspace,table_name) 
         
         # 1. Retrieve Data from Cassandra 
         cassandra = CassandraHandler()
@@ -46,8 +49,11 @@ class Main():
         spark = SparkHandler(self.app_name)
         ## Convert Result Set to pyspark DataFrame
         df = spark.session.createDataFrame(result_set, schema=self.columns_queried)
+        ## Add source information to the Dataframe 
+        df_final = spark.set_columns(df,self.metadata) 
+
         ## Write the dataframe to hdfs 
-        spark.write(df,path,add_timestamp=True)
+        spark.write(df_final,path,add_timestamp=True)
         
         self.logger.info("Successfully written file to {0}".format(path))
         

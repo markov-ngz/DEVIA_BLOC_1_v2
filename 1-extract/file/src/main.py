@@ -63,7 +63,7 @@ class Main():
         """
         columns  = {
                 "created_at":datetime.now().strftime("%Y-%m-%d"),
-                "source":"SFTP",
+                "source":self.host,
                 "source_type":"sftp",
                 "lang_origin":"french",
                 "lang_target":"polish"
