@@ -62,15 +62,16 @@ ssh localhost
 ```
 bin/hdfs namenode -format
 ```
-# 3. Authorization
+# 3. Run 
+7. run hadoop as single node cluster :  
+```
+sbin/start-dfs.sh
+```
+(see doc : https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation)
+# 4. Authorization
 If you run scripts on windows, the user will differ from the WSL's root.
 Hence you need to allow your user to hadoop's group
 ```
 hdfs dfs -chmod 777 /
 ```
-# 4. Run 
-7. run hadoop 
-```
-sbin/start-dfs.sh
-```
-8. Check on WEB GUI ```http://localhost:9870`` `
+8. Check on WEB GUI ```http://localhost:9870```
