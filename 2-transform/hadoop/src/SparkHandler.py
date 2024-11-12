@@ -44,7 +44,25 @@ class SparkHandler() :
         except Exception as e :
             self.logger.error(e)
             raise e 
+        
+    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",")->list[DataFrame] :
+        """
+        Read as a CSV , files present in the given folders path  
+        """
+        dataframes  = []
+        for folder in folder_paths : 
+            try: 
+                file_paths = self.list_files(folder)
+            except FileNotFoundError as e : 
+                err = "Unable to list files from folder %s . Err : %s" % folder , str(e)
+                self.logger.error(err)
+                continue 
 
+            for file_path in file_paths : 
+                df = self.session.read.option("delimiter", delimiter).option("header", header).csv(file_path)
+                dataframes.append(df)
+
+        return dataframes
     def set_columns(self, df : DataFrame , col : dict )-> DataFrame:
         """
         Args :

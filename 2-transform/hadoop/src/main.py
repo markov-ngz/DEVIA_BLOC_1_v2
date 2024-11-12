@@ -1,4 +1,5 @@
 from JsonLogger import JsonLogger
+from TranslationCleaner import TranslationCleaner 
 from SparkHandler import SparkHandler 
 import sys 
 class Main():
@@ -8,23 +9,17 @@ class Main():
     delimiter :str = "\t"
 
     def __init__(self) -> None:
-        spark = SparkHandler(self.app_name)
+        self.spark = SparkHandler(self.app_name)
 
-        spark.set_filesystem("hdfs://localhost:9000")
+        self.spark.set_filesystem("hdfs://localhost:9000")
 
-        for folder in self.source_folders : 
-            try: 
-                file_paths = spark.list_files(folder)
-            except FileNotFoundError as e : 
-                err = "Unable to list files from folder %s . Err : %s" % folder , str(e)
-                # Log error
-                continue 
-            print(file_paths)
-            for file_path in file_paths : 
-                df = spark.session.read.option("delimiter", self.delimiter).option("header", True).csv(file_path)
-                df.show(n=5)
-                spark.session.stop()
-                sys.exit(0)
+        dataframes = self.spark.get_dataframes(self.source_folders)
+
+        final_dataframe = TranslationCleaner().clean(dataframes)
+
+        
+        self.spark.session.stop()
+        sys.exit(0)
         # for folder in self.source_folders : 
             
         #     if folder exists ? :  
