@@ -38,9 +38,9 @@ class SparkHandler() :
             self.logger.error(e)
             raise e 
     
-    def read(self,path:str)->DataFrame:
+    def read_text(self,path:str)->DataFrame:
         try:
-            return self.session.read.text(path)
+            return self.session.read.options.text(path)
         except Exception as e :
             self.logger.error(e)
             raise e 
