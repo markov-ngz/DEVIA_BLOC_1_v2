@@ -15,14 +15,15 @@ class TranslationCleaner():
         """
         for path, df  in dfs.items() :
             file_statistics  = {"file":path}
-            # Count null lines 
-            file_statistics["count_na"] = df.na.count()
-            # Drop them 
-            df = df.dropna()
-
             # Format columns
             try :  
                 df = self.format_columns(df)
+                # Count null lines 
+                file_statistics["count_na"] = df.select("text_origin","text_target","lang_origin","lang_target").na.count()
+                # Drop them 
+                df = df.dropna(subset=["text_origin","text_target","lang_origin","lang_target"])
+                # df = df.filter("LEN(text_origin) > 2").filter("LEN(text_target) > 2")
+
             except Exception as e :
                 self.logger.error(str(e)) 
             finally : 
@@ -30,13 +31,17 @@ class TranslationCleaner():
 
     def format_column(self,columns_names: list[str], output_column : str , df : DataFrame, raise_on_not_found : bool = False ) -> DataFrame :
         """
-        
+        If a the dataframe has a column in the given column list of names  \n 
+        Then it rename it 
+        If the column is not found , the dataframe is returned or an exception can be raised with argument raise_on_not_found
         """    
         for col in df.columns : 
             if col in columns_names : 
                 return df.withColumnRenamed(col, output_column)
         if raise_on_not_found : 
             raise ValueError("DataFrame do not contain columns : {0} . Got : {1}".format(columns_names , df.columns))
+        else : 
+            return df 
     
     def format_columns(self,df:DataFrame)->DataFrame :
         """ 
@@ -57,6 +62,7 @@ class TranslationCleaner():
         for dict_cols in [text_origin_columns,text_target_columns, lang_origin_columns, lang_target_columns] :
             df = self.format_column(dict_cols["raw_columns"],dict_cols["formatted"],df, raise_on_not_found=True)
 
+        
         for dict_cols in [source_columns, source_type_columns, created_at_columns]:
             df = self.format_column(dict_cols["raw_columns"],dict_cols["formatted"],df)
 
