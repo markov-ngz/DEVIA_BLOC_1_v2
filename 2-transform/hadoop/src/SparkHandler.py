@@ -45,11 +45,12 @@ class SparkHandler() :
             self.logger.error(e)
             raise e 
         
-    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",")->list[DataFrame] :
+    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",")->dict :
         """
-        Read as a CSV , files present in the given folders path  
+        Read as a CSV , files present in the given folders path
+        Return dict{ str <file_path> : DataFrame }  
         """
-        dataframes  = []
+        dataframes  = {}
         for folder in folder_paths : 
             try: 
                 file_paths = self.list_files(folder)
@@ -60,7 +61,7 @@ class SparkHandler() :
 
             for file_path in file_paths : 
                 df = self.session.read.option("delimiter", delimiter).option("header", header).csv(file_path)
-                dataframes.append(df)
+                dataframes[file_path] = df 
 
         return dataframes
     def set_columns(self, df : DataFrame , col : dict )-> DataFrame:

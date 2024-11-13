@@ -1,5 +1,21 @@
 # Transformation de la donnée
 
+## Agregation Rules 
+
+Clean Typo 
+- escape quotechar """ 
+- 3 char minimum len 
+
+Generic 
+- datasets columns names
+- no null
+
+Entrée corrompues
+- difference len trop importante entre parole/traduit
+- uniformiser la langue 
+
+Duplicates are handled at loading ( even though it could be done at this step )
+
 ## 1. Kafka
 
 ### Summary Schema : 
@@ -11,6 +27,8 @@ This is done in order to have the api published message and the message from thi
 ### 1.2 Transform 
 Both sources ( API + Database ) have the same format, hence they are now transformed and aggregated by a set of specified rules (same as Big Data).
 After being transformed the data is the published to a topic for the cleaned data.
+
+## 2. Hadoop 
 
 
 
