@@ -1,4 +1,5 @@
 from pyspark.sql import DataFrame
+from pyspark.sql.functions import length , col 
 from JsonLogger import JsonLogger
 
 class TranslationCleaner():
@@ -22,8 +23,9 @@ class TranslationCleaner():
                 file_statistics["count_na"] = df.select("text_origin","text_target","lang_origin","lang_target").na.count()
                 # Drop them 
                 df = df.dropna(subset=["text_origin","text_target","lang_origin","lang_target"])
-                # df = df.filter("LEN(text_origin) > 2").filter("LEN(text_target) > 2")
-
+                # df = df.filter(length(col("text_origin")) > 2).filter(length(col("text_target")) > 2)
+                df.show()
+                break ; 
             except Exception as e :
                 self.logger.error(str(e)) 
             finally : 
@@ -37,6 +39,7 @@ class TranslationCleaner():
         """    
         for col in df.columns : 
             if col in columns_names : 
+                self.logger.info(f"Renamed column {col} to {output_column}")
                 return df.withColumnRenamed(col, output_column)
         if raise_on_not_found : 
             raise ValueError("DataFrame do not contain columns : {0} . Got : {1}".format(columns_names , df.columns))
