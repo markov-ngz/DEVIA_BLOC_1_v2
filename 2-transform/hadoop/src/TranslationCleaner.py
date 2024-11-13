@@ -1,5 +1,5 @@
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import length , col 
+from pyspark.sql.functions import length , col , regexp_replace
 from JsonLogger import JsonLogger
 
 class TranslationCleaner():
@@ -20,10 +20,15 @@ class TranslationCleaner():
             try :  
                 df = self.format_columns(df)
                 # Count null lines 
-                file_statistics["count_na"] = df.select("text_origin","text_target","lang_origin","lang_target").na.count()
+                file_statistics["count_null_by_columns"] = {col:df.filter(df[col].isNull()).count() for col in df.columns}
                 # Drop them 
                 df = df.dropna(subset=["text_origin","text_target","lang_origin","lang_target"])
-                # df = df.filter(length(col("text_origin")) > 2).filter(length(col("text_target")) > 2)
+                # Filter on length
+                df = df.filter(length(col("text_origin")) > 2).filter(length(col("text_target")) > 2)
+                # Quotechar filtering
+                df.text_origin = df.select(regexp_replace('text_origin', r'"""', '"').alias("text_origin"))
+                df.text_target = df.select(regexp_replace('text_target', r'"""', '"').alias("text_target"))
+                
                 df.show()
                 break ; 
             except Exception as e :
@@ -55,11 +60,11 @@ class TranslationCleaner():
         
         text_origin_columns = {"raw_columns":["text_source","source_text","text_origin","origin_text","from","from_text","text_from"] , "formatted":"text_origin"}
         text_target_columns = {"raw_columns":["to_text","text_to","to","target_text","text_target"],"formatted":"text_target"}
-        lang_origin_columns = {"raw_colums":["lang_origin","lang_source","source_lang"], "formatted":"lang_origin"}
-        lang_target_columns =  {"raw_colums":["lang_target","target_lang","or"], "formatted":"lang_target"}
-        source_columns =  {"raw_colums":["source","source_value"], "formatted":"source_columns"}
-        source_type_columns =  {"raw_colums":["source_type","type"], "formatted":"source_type"}
-        created_at_columns =  {"raw_colums":["created_at","extracted_at"], "formatted":"created_at"}
+        lang_origin_columns = {"raw_columns":["lang_origin","lang_source","source_lang"], "formatted":"lang_origin"}
+        lang_target_columns =  {"raw_columns":["lang_target","target_lang","or"], "formatted":"lang_target"}
+        source_columns =  {"raw_columns":["source","source_value"], "formatted":"source_columns"}
+        source_type_columns =  {"raw_columns":["source_type","type"], "formatted":"source_type"}
+        created_at_columns =  {"raw_columns":["created_at","extracted_at"], "formatted":"created_at"}
 
         # Raise Error if columns not found 
         for dict_cols in [text_origin_columns,text_target_columns, lang_origin_columns, lang_target_columns] :
@@ -71,9 +76,4 @@ class TranslationCleaner():
 
         return df 
 
-
-    def clean_quotechar(self,df:DataFrame)->DataFrame:
-        pass 
-    def clean_unwanted_characters(self, df:DataFrame)->DataFrame :  
-        pass
     

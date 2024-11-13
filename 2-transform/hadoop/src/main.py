@@ -13,7 +13,7 @@ class Main():
 
         self.spark.set_filesystem("hdfs://localhost:9000")
 
-        dataframes = self.spark.get_dataframes(self.source_folders)
+        dataframes = self.spark.get_dataframes(self.source_folders, header=True, delimiter="\t")
 
         final_dataframe = TranslationCleaner().clean(dataframes)
 
