@@ -1,11 +1,15 @@
 from JsonLogger import JsonLogger
 from TranslationCleaner import TranslationCleaner 
 from SparkHandler import SparkHandler 
-import sys 
+import sys
+from datetime import datetime 
+import uuid
+
 class Main():
 
     app_name :str = "transformation"
     source_folders : list[str] = ["/translations/cassandra","/translations/sftp","/translations/web_scrapping"]
+    output_path : str = "hdfs://localhost:9000/translations/output/"
     delimiter :str = "\t"
 
     def __init__(self) -> None:
@@ -17,7 +21,7 @@ class Main():
 
         final_dataframe = TranslationCleaner().clean(dataframes)
 
-        
+        self.spark.write(final_dataframe, self.output_path + "clean.csv", )
         self.spark.session.stop()
         sys.exit(0)
         # for folder in self.source_folders : 

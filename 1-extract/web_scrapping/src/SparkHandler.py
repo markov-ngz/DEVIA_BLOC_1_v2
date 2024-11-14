@@ -17,7 +17,7 @@ class SparkHandler() :
             os.environ["PYSPARK_PYTHON"] = "python" 
             self.logger.warning("Environment Variable PYSPARK_PYTHON not set. Setting its value as 'python'")
 
-    def write(self,df:DataFrame, path: str , sep:str ='\t',quotechar="}",mode:str ='append', add_timestamp : bool = False)->None:
+    def write(self,df:DataFrame, path: str , sep:str ='\t',quotechar=None,mode:str ='append', add_timestamp : bool = False)->None:
         if add_timestamp : 
             path = self.add_timestamp(path) 
         try : 

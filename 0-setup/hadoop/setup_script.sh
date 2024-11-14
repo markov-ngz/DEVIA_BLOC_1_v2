@@ -11,5 +11,8 @@ hdfs dfs -mkdir /translations/cassandra
 hdfs dfs -mkdir /translations/web_scrapping
 hdfs dfs -mkdir /translations/sftp
 
+# Output folder to load the data
+hdfs dfs -mkdir /translations/output
+
 # Adjust permissions
 hdfs dfs -chmod -R 777 /translations
