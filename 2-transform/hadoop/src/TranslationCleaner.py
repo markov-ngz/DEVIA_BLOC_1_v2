@@ -1,6 +1,8 @@
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import length , col , regexp_replace
+from pyspark.sql.functions import length , col , regexp_replace, abs
 from JsonLogger import JsonLogger
+from functools import reduce 
+
 
 class TranslationCleaner():
 
@@ -14,6 +16,7 @@ class TranslationCleaner():
         Clean the given spark.DataFrames and then Aggregate it 
         NOTE : would be nice to save errors in a DataFrame to then save for later inspection 
         """
+        clean_dfs = []
         for path, df  in dfs.items() :
             file_statistics  = {"file":path}
             # Format columns
@@ -29,13 +32,19 @@ class TranslationCleaner():
                 df.text_origin = df.select(regexp_replace('text_origin', r'"""', '"').alias("text_origin"))
                 df.text_target = df.select(regexp_replace('text_target', r'"""', '"').alias("text_target"))
                 
-                df.show()
-                break ; 
+                # Filter based on a % of character len 
+                df = df.withColumn("len_origin-len_target",abs((length(col('text_origin')) - length(col('text_target'))) / length(col('text_origin'))))
+                df = df.filter(col('len_origin-len_target') < 0.1)
+                clean_dfs.append(df)
             except Exception as e :
                 self.logger.error(str(e)) 
+                continue
             finally : 
                 self.logger.info(file_statistics)
+        final_df = ""
+        print(df.count())
 
+        return final_df 
     def format_column(self,columns_names: list[str], output_column : str , df : DataFrame, raise_on_not_found : bool = False ) -> DataFrame :
         """
         If a the dataframe has a column in the given column list of names  \n 
@@ -75,5 +84,6 @@ class TranslationCleaner():
             df = self.format_column(dict_cols["raw_columns"],dict_cols["formatted"],df)
 
         return df 
+
 
     

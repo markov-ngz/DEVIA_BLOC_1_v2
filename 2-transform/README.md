@@ -11,8 +11,7 @@ Generic
 - no null
 
 Entrée corrompues
-- difference len trop importante entre parole/traduit
-- uniformiser la langue 
+-  10% difference len trop importante entre parole/traduit
 
 Duplicates are handled at loading ( even though it could be done at this step )
 
