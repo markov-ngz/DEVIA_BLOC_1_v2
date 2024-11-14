@@ -41,8 +41,9 @@ class TranslationCleaner():
                 continue
             finally : 
                 self.logger.info(file_statistics)
-        final_df = ""
-        print(df.count())
+        
+        # Aggregate 
+        final_df = reduce(DataFrame.unionAll,clean_dfs)
 
         return final_df 
     def format_column(self,columns_names: list[str], output_column : str , df : DataFrame, raise_on_not_found : bool = False ) -> DataFrame :
