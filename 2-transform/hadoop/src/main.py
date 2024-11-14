@@ -1,9 +1,6 @@
 from JsonLogger import JsonLogger
 from TranslationCleaner import TranslationCleaner 
 from SparkHandler import SparkHandler 
-import sys
-from datetime import datetime 
-import uuid
 
 class Main():
 
@@ -13,36 +10,40 @@ class Main():
     delimiter :str = "\t"
 
     def __init__(self) -> None:
-        self.spark = SparkHandler(self.app_name)
+        """
+        This code does the following ; 
+        1. Find Raw data files in HDFS 
+        2. Clean the data & aggregate it 
+        3. Write the result to HDFS 
+        """
 
+        # Setup Logger
+        self.logger = JsonLogger()
+        self.logger.set_logger(__name__)
+
+        # Spark Handler and base URL 
+        self.spark = SparkHandler(self.app_name)
         self.spark.set_filesystem("hdfs://localhost:9000")
 
-        dataframes = self.spark.get_dataframes(self.source_folders, header=True, delimiter="\t")
+        try : 
+            # 1. Get raw data 
+            dataframes = self.spark.get_dataframes(self.source_folders, header=True, delimiter="\t")
+            self.logger.info("Found {0} DataFrames, beginning transformation ...".format(len(dataframes.keys())))
 
-        final_dataframe = TranslationCleaner().clean(dataframes)
-
-        self.spark.write(final_dataframe, self.output_path + "clean.csv", )
-        self.spark.session.stop()
-        sys.exit(0)
-        # for folder in self.source_folders : 
-            
-        #     if folder exists ? :  
-        #         list files in folder 
-        #     else :
-        #         log error 
-        #         continue 
-
-        #     for file in files : 
-        #         try : 
-        #             check col format or format it , 
-
-        #             apply transformation
-
-        #             append it to the aggregated file 
-        #         except : 
-        #             log err 
-        #             continue
-
+            if len(dataframes) > 0 : 
+                # 2. Transform it 
+                final_dataframe = TranslationCleaner().clean(dataframes)
+                self.logger.info("DataFrames transformed and aggregated ".format(len(dataframes.keys())))
+                
+                # 3. Write output to HDFS 
+                self.spark.write(final_dataframe, self.output_path + "clean.csv",add_timestamp=True)
+                self.logger.info("Data Transformed. Final dataset contains {0} rows ".format(final_dataframe.count()))
+                
+        except Exception as e :
+            self.logger.error(f"An unexpected error has occured. Error : {str(e)}")
+            raise e 
+        finally : 
+            self.spark.session.stop()
     
 if __name__=='__main__':
     Main()
