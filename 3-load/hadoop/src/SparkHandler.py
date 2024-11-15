@@ -4,6 +4,7 @@ from pyspark.sql.functions import lit
 import os 
 from JsonLogger import JsonLogger 
 from datetime import datetime 
+from functools import reduce
 
 class SparkHandler() : 
 
@@ -48,7 +49,7 @@ class SparkHandler() :
             self.logger.error(e)
             raise e 
         
-    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",")->dict :
+    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",", aggregate=False)->dict :
         """
         Read as a CSV , files present in the given folders path
         Return dict{ str <file_path> : DataFrame }  
@@ -65,8 +66,11 @@ class SparkHandler() :
             for file_path in file_paths : 
                 df = self.session.read.option("delimiter", delimiter).option("header", header).csv(file_path)
                 dataframes[file_path] = df 
-
-        return dataframes
+        if not aggregate : 
+            return dataframes
+        else : 
+            return reduce(DataFrame.unionAll,dataframes)
+        
     def set_columns(self, df : DataFrame , col : dict )-> DataFrame:
         """
         Args :

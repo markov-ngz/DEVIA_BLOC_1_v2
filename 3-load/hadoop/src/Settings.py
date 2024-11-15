@@ -16,6 +16,8 @@ class Settings():
         self.database_password = database_password
         self.database_name = database_name
         self.database_username = database_username
+        self.hdfs_url = hdfs_url
+        self.hdfs_folder = hdfs_folder
 
 settings = Settings(
     os.environ['DB_HOST'],

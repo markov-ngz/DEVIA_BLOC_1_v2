@@ -24,7 +24,7 @@ class PostgresHandler():
         """
         url = f"""postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"""
         try : 
-            self.conn = psycopg2.connect(self.url, cursor_factory = RealDictCursor)
+            self.conn = psycopg2.connect(url, cursor_factory = RealDictCursor)
             self.conn.autocommit = True   
         except psycopg2.errors.ConnectionFailure as e :
             self.logger.error(str(e))
@@ -34,8 +34,15 @@ class PostgresHandler():
              raise e
              
 
-    def execute_sql(self):
-        pass 
+    def execute_sql(self, sql:str)-> None :
+        try:
+            cursor = self.conn.cursor() 
+            cursor.execute(sql) 
+            cursor.close()
+        except psycopg2.Error as e : 
+            self.logger.error(str(e))
+            raise e 
+         
     def copy_local_csv(self, file_path:str,table_name:str, sep:str, hquote:str)->None:
         query = f"""copy {table_name} FROM stdin WITH DELIMITER '{sep}' CSV HEADER QUOTE '{hquote}';"""
         try:
