@@ -49,7 +49,7 @@ class SparkHandler() :
             self.logger.error(e)
             raise e 
         
-    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",", aggregate=False)->dict :
+    def get_dataframes(self,folder_paths : list[str], header : bool = False , delimiter :str = ",", aggregate=False)->dict | DataFrame :
         """
         Read as a CSV , files present in the given folders path
         Return dict{ str <file_path> : DataFrame }  
@@ -69,7 +69,7 @@ class SparkHandler() :
         if not aggregate : 
             return dataframes
         else : 
-            return reduce(DataFrame.unionAll,dataframes)
+            return reduce(DataFrame.unionAll,[i[1] for i in dataframes.items()])
         
     def set_columns(self, df : DataFrame , col : dict )-> DataFrame:
         """

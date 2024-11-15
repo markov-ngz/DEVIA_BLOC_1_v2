@@ -19,7 +19,9 @@ class Main():
         spark.set_context()
         df = spark.get_dataframes([settings.hdfs_folder],header=True,delimiter="\t", aggregate=True)
 
-    
+        df.show()
+        # 2. Get langues and sources 
+        
         
 
 
