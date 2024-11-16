@@ -16,8 +16,9 @@ class Main():
 
         # 1. Get clean data 
         spark = SparkHandler(self.app_name)
-        spark.set_context()
-        df = spark.get_dataframes([settings.hdfs_folder],header=True,delimiter="\t", aggregate=True)
+        spark.set_filesystem()
+        df = spark.get_dataframes([settings.hdfs_folder],header=False,delimiter="\t", aggregate=True)
+        
 
         df.show()
         # 2. Get langues and sources 
