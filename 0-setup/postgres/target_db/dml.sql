@@ -39,6 +39,21 @@ CREATE  TABLE public.translations
 ALTER TABLE public.translations
 ADD CONSTRAINT unique_constraint_name UNIQUE (text_origin, text_target, languages_id);
 
+ALTER TABLE translations ADD COLUMN hash VARCHAR ;
+
+CREATE OR REPLACE FUNCTION hash_update_tg() RETURNS trigger AS $$
+BEGIN
+    IF tg_op = 'INSERT' OR tg_op = 'UPDATE' THEN
+        NEW.hash = md5(NEW.text_origin || NEW.text_target || NEW.languages_id)::VARCHAR;
+        RETURN NEW;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER translations_compute_hash 
+BEFORE INSERT OR UPDATE ON translations 
+FOR EACH ROW EXECUTE PROCEDURE hash_update_tg();
+
 ALTER TABLE public.languages
 ADD CONSTRAINT unique_constraint_language UNIQUE (lang_origin, lang_target);
 
