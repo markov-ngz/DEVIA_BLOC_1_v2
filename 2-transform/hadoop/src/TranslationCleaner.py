@@ -35,7 +35,7 @@ class TranslationCleaner():
                 # Filter based on a % of character len 
                 df = df.withColumn("len_origin-len_target",abs((length(col('text_origin')) - length(col('text_target'))) / length(col('text_origin'))))
                 df = df.filter(col('len_origin-len_target') < 0.1)
-                df.drop("len_origin-len_target")
+                df = df.drop("len_origin-len_target")
                 clean_dfs.append(df)
             except Exception as e :
                 self.logger.error(str(e)) 
