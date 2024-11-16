@@ -34,15 +34,19 @@ class PostgresHandler():
              raise e
              
 
-    def execute_sql(self, sql:str)-> None :
+    def execute_sql(self, sql:str, returns:bool = True)-> list | None :
         try:
             cursor = self.conn.cursor() 
             cursor.execute(sql) 
+            result = cursor.fetchall()
             cursor.close()
         except psycopg2.Error as e : 
             self.logger.error(str(e))
-            raise e 
-         
+            raise e
+        
+        if returns : 
+            return result  
+
     def copy_local_csv(self, file_path:str,table_name:str, sep:str, hquote:str)->None:
         query = f"""copy {table_name} FROM stdin WITH DELIMITER '{sep}' CSV HEADER QUOTE '{hquote}';"""
         try:
