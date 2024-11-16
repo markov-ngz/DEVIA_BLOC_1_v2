@@ -1,13 +1,23 @@
 from PostgresHandler import PostgresHandler
 from pyspark.sql import DataFrame 
 from pyspark.sql.functions import udf
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, StringType, StructField
+from SparkHandler import SparkHandler 
 
 class TranslationLoader(PostgresHandler):
 
     def __init__(self, host: str, port: str, database: str, user: str, password: str) -> None:
         super().__init__(host, port, database, user, password)
 
+    def get_hashs(self, spark :SparkHandler)->DataFrame : 
+        """
+        Get existing hashes from the database
+        """
+        query = """SELECT hash FROM translations"""
+        result = self.execute_sql(query)
+        hashs = [r["hash"] for r in result]
+        df  =spark.session.createDataFrame(hashs,StringType()).withColumnRenamed("value","existing_hash")
+        return df 
     def insertSources(self , sources : list)->dict:
         """
         """
@@ -15,7 +25,7 @@ class TranslationLoader(PostgresHandler):
         select_query = "SELECT id FROM public.source WHERE type = '{0}' AND name = '{1}' ;"
             
         return  self.insert_get_id(sources,insert_query,select_query,["source_type","source_columns"])
-    
+
     def insertLanguages(self, pair_languages : list )->list:
         """
         """

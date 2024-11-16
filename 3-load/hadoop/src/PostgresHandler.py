@@ -50,7 +50,6 @@ class PostgresHandler():
     def copy_csv(self,table_name:str, sep:str, hquote:str = None, file_path:str=None, buffer = None)->None:
         hquote_expr =  " CSV HEADER QUOTE" + f"'{hquote}'" if  hquote != None else ""
         query = f"""copy {table_name}(text_origin, text_target,languages_id,source_id,extracted_at) FROM stdin WITH DELIMITER '{sep}' {hquote_expr};"""
-        print(query)
         try:
             if file_path != None: 
                 with open(file_path, 'r', encoding="utf-8") as f:
