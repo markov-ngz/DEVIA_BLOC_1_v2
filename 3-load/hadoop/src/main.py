@@ -3,6 +3,8 @@ from SparkHandler import SparkHandler
 from Settings import settings
 from TranslationLoader import TranslationLoader
 from pyspark.sql import Row
+from pyspark.sql.functions import localtimestamp
+
 
 class Main():
 
@@ -25,7 +27,21 @@ class Main():
         distinct_source : list[Row] = df.select('source_columns','source_type').distinct().collect()
 
         loader = TranslationLoader(settings.database_hostname, settings.database_port,settings.database_name ,settings.database_username, settings.database_password)
+        loader.connect()
 
+        languages_ids = loader.insertLanguages(distinct_langs)
+        sources_ids = loader.insertSources(distinct_source)
+        
+        # 3. Map the languages and the source to the DataFrame 
+        df = loader.map_fk(df,languages_ids,"languages_id")
+        df = loader.map_fk(df,sources_ids,"source_id")
+        df = df.withColumn("extracted_at",localtimestamp())
+        
+        df.show()
+        # 4. Write DataFrame to Target Database
+        # 4.1 DataFrame -> buffer
+        # 4.2 buffer -- copy_expert to database--- > None 
+        
 
 if __name__ == "__main__":
     Main()
