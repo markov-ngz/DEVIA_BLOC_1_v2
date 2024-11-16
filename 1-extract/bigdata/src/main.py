@@ -11,7 +11,7 @@ class Main():
 
     columns_queried : list[str] = ["target_text" ,"target_lang" , "src_lang" , "src_text" , "created_at"]
 
-    metadata : dict = {"source_type":"bigdata", "source":""}
+    metadata : dict = {"source_type":"bigdata", "source":"cassandra"}
 
     def __init__(self) -> None:
         """
