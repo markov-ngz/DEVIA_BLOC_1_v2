@@ -4,7 +4,7 @@ from Settings import settings
 from TranslationLoader import TranslationLoader
 from pyspark.sql import Row
 from pyspark.sql.functions import localtimestamp
-
+import io 
 
 class Main():
 
@@ -35,12 +35,15 @@ class Main():
         # 3. Map the languages and the source to the DataFrame 
         df = loader.map_fk(df,languages_ids,"languages_id")
         df = loader.map_fk(df,sources_ids,"source_id")
-        df = df.withColumn("extracted_at",localtimestamp())
-        
-        df.show()
+        print(df.count())
+        df = df.withColumn("extracted_at",localtimestamp()).drop_duplicates(["text_origin","text_target","languages_id"])
+        print(df.count())
         # 4. Write DataFrame to Target Database
         # 4.1 DataFrame -> buffer
-        # 4.2 buffer -- copy_expert to database--- > None 
+        pd = df.toPandas().drop_duplicates(["text_origin","text_target","languages_id"])
+        pd.to_csv("temp_file.csv",sep="|",index=False,header=False, quotechar="}") # Ugly Loading as loading the dataframe into a buffer BytesIO object did not work 
+        loader.copy_csv("public.translations","|",hquote="}",file_path="temp_file.csv") 
+
         
 
 if __name__ == "__main__":

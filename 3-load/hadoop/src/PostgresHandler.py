@@ -47,16 +47,28 @@ class PostgresHandler():
         if returns : 
             return result  
 
-    def copy_local_csv(self, file_path:str,table_name:str, sep:str, hquote:str)->None:
-        query = f"""copy {table_name} FROM stdin WITH DELIMITER '{sep}' CSV HEADER QUOTE '{hquote}';"""
+    def copy_csv(self,table_name:str, sep:str, hquote:str = None, file_path:str=None, buffer = None)->None:
+        hquote_expr =  " CSV HEADER QUOTE" + f"'{hquote}'" if  hquote != None else ""
+        query = f"""copy {table_name}(text_origin, text_target,languages_id,source_id,extracted_at) FROM stdin WITH DELIMITER '{sep}' {hquote_expr};"""
+        print(query)
         try:
-            with open(file_path, 'r', encoding="utf-8") as f:
-                    cursor = self.conn.cursor()
-                    self.cursor.copy_expert(
-                            query,
-                            f
-                    )
-                    cursor.close()
+            if file_path != None: 
+                with open(file_path, 'r', encoding="utf-8") as f:
+                        cursor = self.conn.cursor()
+                        cursor.copy_expert(
+                                query,
+                                f
+                        )
+            elif buffer != None :
+                cursor = self.conn.cursor()
+                cursor.copy_expert(
+                        query,
+                        buffer
+                )
+                self.conn.commit()
+            else : 
+                raise ValueError("Either buffer or file_path arguments value must be set")
+            cursor.close()
         except psycopg2.Error as e:
             self.logger.error(str(e))
             raise e 
