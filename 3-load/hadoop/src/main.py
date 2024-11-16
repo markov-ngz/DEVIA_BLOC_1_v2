@@ -46,7 +46,7 @@ class Main():
         
         # # 5. Write DataFrame to Target Database
         pd = df.toPandas().drop_duplicates(["text_origin","text_target","languages_id"])
-        pd.to_csv("temp_file.csv",sep="|",index=False,header=False, quotechar="}") # Ugly Loading as loading the dataframe into a buffer BytesIO object did not work 
+        pd.to_csv("temp_file.csv",sep="|",index=False,header=False, quotechar="}") # Ugly Loading as loading the dataframe into a buffer BytesIO object did not work ( no error raised simply no iteration ? )
         loader.copy_csv("public.translations","|",hquote="}",file_path="temp_file.csv") 
         
 
