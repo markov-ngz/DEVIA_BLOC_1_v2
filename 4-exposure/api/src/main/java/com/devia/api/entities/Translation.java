@@ -12,7 +12,8 @@ import jakarta.persistence.Id;
 @Immutable
 @Table(name="translation_view")
 public class Translation {
-    
+    public Translation(){}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,22 +30,22 @@ public class Translation {
     @Column(name = "text_target")
     private String text_target ; 
 
-    @Column(name = "origin_name")
-    private String origin_name ; 
+    @Column(name = "source_name")
+    private String source_name ; 
 
-    @Column(name = "origin_type")
-    private String origin_type ; 
+    @Column(name = "source_type")
+    private String source_type ; 
 
     @Column(name = "extracted_at")
     private String extractedAt ; 
 
 
     public String getSource_type(){
-        return this.origin_type ; 
+        return this.source_type ; 
     }
 
     public String getSource_name(){
-        return this.origin_name ; 
+        return this.source_name ; 
     }
 
     public String getExtractedAt(){
