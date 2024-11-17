@@ -63,6 +63,7 @@ ADD CONSTRAINT unique_constraint_source UNIQUE (type, name);
 CREATE OR REPLACE VIEW translation_view
 AS
 SELECT DISTINCT
+    t.id,
     l.lang_origin,
     l.lang_target,
     text_origin,

@@ -6,10 +6,11 @@ services:
       - 127.0.0.1:6432:5432
     environment:
       POSTGRES_PASSWORD: raditz
-      POSTGRES_USER: kakarott
-      POSTGRES_DB: DBZ
+      POSTGRES_USER: TARGET_USER
+      POSTGRES_DB: TARGET_DB
     volumes:
       - db_spring:/var/lib/postgresql/data
 volumes:
   db_spring:
-    name: "db_spring"
+    external : True
+    name: "target_db-cloned"
