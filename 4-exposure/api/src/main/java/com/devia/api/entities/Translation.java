@@ -68,8 +68,8 @@ public class Translation {
     @Override
     public String toString() {
         return "{" +
-                " "+getLang_origin()+"='" + getText_origin() + "'" +
-                ", "+getLang_origin()+"='" + getText_target() + "'" +
+                " "+getLang_origin()+":'" + getText_origin() + "'" +
+                ", "+getLang_target()+":'" + getText_target() + "'" +
                 "}";
     }
 }
