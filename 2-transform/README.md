@@ -3,7 +3,7 @@
 ## Agregation Rules 
 
 Clean Typo 
-- escape quotechar """ 
+- escape quotechar """ ( spécifique à la mise en .csv nécessaire à Hadoop )
 - 3 char minimum len 
 
 Generic 

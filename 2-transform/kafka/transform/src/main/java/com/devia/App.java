@@ -44,6 +44,7 @@ public class App
             } catch (Exception e) {
                 count_errors += 1 ; 
                 Logger.error(e.getMessage());
+                continue ; 
             }
    
         }
@@ -66,7 +67,13 @@ public class App
         String clean_text_target = clean(text_target) ;
         String extracted_at = transformTimestamp(ts) ; 
 
+        // 3. Check if length difference > 10 % 
+        if(Math.abs((clean_text_source.length() - clean_text_target.length()) / clean_text_target.length()) > 0.1){
+            throw new Exception("Difference length between the text from the source and the target's must not differ from more than 10 % ") ;    
+        }
 
+        // 4. Create the object 
+        // Use of the setters here as the creation of a constructor break the JSON serialization (?)
         cleanTranslation.setText_source(clean_text_source);
         cleanTranslation.setText_target(clean_text_target);
         cleanTranslation.setExtractedAt(extracted_at);

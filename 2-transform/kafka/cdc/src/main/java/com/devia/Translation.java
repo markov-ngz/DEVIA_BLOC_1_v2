@@ -8,9 +8,9 @@ public class Translation {
 
     private String text_target ; 
 
-    private String lang_source = "fr" ; 
+    private String lang_source = "french" ; 
 
-    private String lang_target = "pl" ; 
+    private String lang_target = "polish" ; 
 
     private Long ts_ms ; 
 
