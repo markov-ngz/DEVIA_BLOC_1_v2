@@ -1,5 +1,8 @@
 package com.devia.api.dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TranslationDTO {
 
     private String lang_origin;
@@ -42,5 +45,12 @@ public class TranslationDTO {
         this.text_target = text_target ; 
         this.lang_target = lang_target ; 
         this.lang_origin  = lang_origin; 
+    }
+    public Map<String,String> toJSON(){
+        Map<String,String> h = new HashMap<String,String>() ; 
+        h.put(this.lang_origin, this.text_origin) ; 
+        h.put(this.lang_target, this.text_target) ; 
+
+        return h ;
     }
 }

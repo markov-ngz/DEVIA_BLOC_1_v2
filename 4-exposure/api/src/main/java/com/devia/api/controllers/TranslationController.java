@@ -2,7 +2,9 @@ package com.devia.api.controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -31,9 +33,13 @@ public class TranslationController {
 
     @GetMapping("")
     @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_USER','SCOPE_ROLE_ADMIN')") // Accessible par ROLE_USER et ROLE_ADMIN
-    public List<TranslationDTO> getAll() {
-        List<Translation> l = translationRepository.findAll() ; 
-        return l.stream().map((obj) -> new TranslationDTO(obj.getText_origin(), obj.getText_target(), obj.getLang_origin(), obj.getLang_target()))
+    public List<Map<String,String>> getAll() {
+        // List<Translation> -> Stream -> (TranslationDTO -> Map<String,String>) -> List<Map<String,String>>
+        return translationRepository.findAll().stream().map((obj) -> new TranslationDTO(
+                obj.getText_origin(), 
+                obj.getText_target(), 
+                obj.getLang_origin(), 
+                obj.getLang_target()).toJSON())
             .collect(Collectors.toList());
     }
 }
