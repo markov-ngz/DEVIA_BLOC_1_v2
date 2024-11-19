@@ -2,12 +2,20 @@ services:
   scrapping:
     container_name: scrapping
     image: markreduce/etl:webscrapping
-    build:
-      context: .
-    volumes:
-      - scrap_logs:/usr/src/app/logs
+    # build:
+    #   context: .
+    # volumes:
+    #   - scrap_logs:/usr/src/app/logs
     environment:
-      LOG_FILE: ./logs/.log
-volumes:
-  scrap_logs:
-    name: "scrap_logs"
+      # LOG_FILE: ./logs/.log
+      HDFS_URL: hdfs://localhost:9000
+      FILE_PATH: /web_scrapping/web_scrapping.csv
+    ports:
+      - 127.0.0.1:9000:9000
+networks:
+  kafka:
+    name: kafka
+    external: true
+# volumes:
+#   scrap_logs:
+#     name: "scrap_logs"
