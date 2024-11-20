@@ -8,10 +8,10 @@ services:
     #   - scrap_logs:/usr/src/app/logs
     environment:
       # LOG_FILE: ./logs/.log
-      HDFS_URL: hdfs://localhost:9000
-      FILE_PATH: /web_scrapping/web_scrapping.csv
-    ports:
-      - 127.0.0.1:9000:9000
+      HDFS_URL: hdfs://host.docker.internal:9000
+      FILE_PATH: /web_scrapping.csv
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
 networks:
   kafka:
     name: kafka

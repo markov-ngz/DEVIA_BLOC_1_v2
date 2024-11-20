@@ -37,7 +37,7 @@ class WebScrapping():
             self.logger.info("Successfully writed file to %s"  % self.file_path )
 
         except Exception as e : 
-            self.logger.error(e)
+            self.logger.error(str(e))
             raise e 
         finally : 
             spark.session.stop()

@@ -10,7 +10,7 @@ class SparkHandler() :
         self.logger.set_logger(__name__)
 
         self.setup_env() 
-        self.session = SparkSession.builder.master("local").appName(app_name).getOrCreate()
+        self.session = SparkSession.builder.master("local[*]").config("spark.hadoop.fs.defaultFS", "hdfs://host.docker.internal:9000").appName(app_name).getOrCreate()
 
     def setup_env(self)->None :
         if( os.getenv("PYSPARK_PYTHON") == None ):
@@ -23,14 +23,14 @@ class SparkHandler() :
         try : 
             df.write.csv(path,quote=quotechar, sep=sep, mode=mode )
         except Exception as e : 
-            self.logger.error(e)
+            self.logger.error(str(e))
             raise e 
     
     def read(self,path:str)->DataFrame:
         try:
             return self.session.read.text(path)
         except Exception as e :
-            self.logger.error(e)
+            self.logger.error(str(e))
             raise e 
 
     def set_columns(self, df : DataFrame , col : dict )-> DataFrame:
