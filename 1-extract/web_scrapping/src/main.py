@@ -34,7 +34,7 @@ class WebScrapping():
             
             # 3. Write into HDFS 
             spark.write(raw_df_scrap,self.config["HDFS_URL"] + self.config["FILE_PATH"], add_timestamp=True )
-            self.logger.info("Successfully writed file to %s"  % self.file_path )
+            self.logger.info("Successfully writed file to %s" % self.config["FILE_PATH"])
 
         except Exception as e : 
             self.logger.error(str(e))
