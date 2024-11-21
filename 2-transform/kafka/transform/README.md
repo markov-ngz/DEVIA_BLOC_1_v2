@@ -37,3 +37,8 @@ Extract information from the jar file
 ```
 jar xf <filename>.jar
 ```
+
+Build docker image 
+```
+docker buildx build -t markreduce/etl:kafkatransform . 
+```
