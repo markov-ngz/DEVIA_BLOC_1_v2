@@ -3,6 +3,35 @@ Overview
 
 Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
 
+
+Setup Docker operator
+=====================
+This assumes the commands ```astro dev init``` and ```astro dev start``` are already run. 
+1. Export compose file used by astro
+```
+astro dev object export --compose
+```
+2. Mount the docker socket to the scheduler service in the compose.yaml file
+```
+- /var/run/docker.sock:/var/run/docker.sock:rw
+```
+3. Stop the running airflow's container and start it again with the command
+```
+astro dev start --compose-file compose.yaml
+```
+4. Get network name created by default when running the astro dev start for the 1st time  and specify it inside the DAG
+```
+    t2 = DockerOperator(
+        task_id='<task_id>',
+        image='<image>',
+        command='<for entrypoint if you did not specify any>',
+        docker_url="unix://var/run/docker.sock", # as airflow is run inside docker, the socket must be mounted inside the container so that it can listen to docker daemon 
+        network_mode="docker network name you wish to run the container to",
+    )
+``` 
+URL : https://medium.com/apache-airflow/utilizing-dockeroperator-in-airflow-to-run-containerized-applications-in-data-engineer-projects-f596df26ea83 
+
+
 Project Contents
 ================
 
