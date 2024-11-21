@@ -24,7 +24,7 @@ public class App {
         String publish_topic = System.getenv("KAFKA_TOPIC"); 
 
         // data that will be translated 
-        String[] item_to_translate = {"Salut!","Cours !","Courez !","Qui ?","Ça alors !","Au feu !","À l'aide !","Saute.","Ça suffit !","Stop !"} ; 
+        String[] item_to_translate = {"Au feu !","À l'aide !"} ; 
 
         // API to call 
         String url = "https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt" ; 
