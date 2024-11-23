@@ -7,7 +7,7 @@ class Main():
 
     app_name : str = "bigdata"
     
-    environment_variables :list[str] = ["CASSANDRA_KEYSPACE","CASSANDRA_TABLE","HDFS_URL","FILE_PATH"]
+    environment_variables :list[str] = ["CASSANDRA_KEYSPACE","CASSANDRA_TABLE","CASSANDRA_IP","HDFS_URL","FILE_PATH"]
 
     columns_queried : list[str] = ["target_text" ,"target_lang" , "src_lang" , "src_text" , "created_at"]
 
@@ -36,7 +36,7 @@ class Main():
         self.metadata["source"] = "{0}.{1}".format(keyspace,table_name) 
         
         # 1. Retrieve Data from Cassandra 
-        cassandra = CassandraHandler()
+        cassandra = CassandraHandler(ip=self.config["CASSANDRA_IP"])
         ## Connect to cluster
         cassandra.connect(keyspace)
         ## Configure rows of the result set returned as a tuple to easily create spark.DataFrame after 

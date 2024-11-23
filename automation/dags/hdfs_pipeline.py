@@ -25,7 +25,7 @@ def hdfs_pipeline():
         container_name="extract_cassandra",
         docker_url="unix://var/run/docker.sock", # as airflow is run inside docker, the socket must be mounted inside the container so that it can listen to docker daemon 
         network_mode="kafka", # name of container's running network
-        environment={"HDFS_URL":HDFS_URL,"FILE_PATH":"/translations/cassandra/cassandra.csv","CASSANDRA_KEYSPACE":"translations","CASSANDRA_TABLE":"pl_fr"}
+        environment={"HDFS_URL":HDFS_URL,"FILE_PATH":"/translations/cassandra/cassandra.csv","CASSANDRA_IP":"node-1","CASSANDRA_KEYSPACE":"translations","CASSANDRA_TABLE":"pl_fr"}
     )
 
     extract_webscrapping = DockerOperator(

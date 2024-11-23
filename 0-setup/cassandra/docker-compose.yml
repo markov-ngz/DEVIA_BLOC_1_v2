@@ -12,7 +12,7 @@ services:
       CASSANDRA_CLUSTER_NAME: my-cluster
       CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
       CASSANDRA_DC: my-datacenter
-      CASSANDRA_BROADCAST_ADDRESS: 127.0.0.1
+      CASSANDRA_BROADCAST_ADDRESS: node-1
     networks:
       - cassandra
     
