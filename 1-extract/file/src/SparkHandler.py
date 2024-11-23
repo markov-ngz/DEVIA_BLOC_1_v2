@@ -10,7 +10,7 @@ class SparkHandler() :
         self.logger.set_logger(__name__)
 
         self.setup_env() 
-        self.session = SparkSession.builder.master("local").appName(app_name).getOrCreate()
+        self.session = SparkSession.builder.config("spark.hadoop.dfs.client.use.datanode.hostname","true").master("local").appName(app_name).getOrCreate()
 
     def setup_env(self)->None :
         if( os.getenv("PYSPARK_PYTHON") == None ):

@@ -19,7 +19,7 @@ class SparkHandler() :
         self.app_name = app_name 
 
         self.setup_env() 
-        self.session = SparkSession.builder.master("local").appName(self.app_name).getOrCreate()
+        self.session = SparkSession.builder.config("spark.hadoop.dfs.client.use.datanode.hostname","true").master("local").appName(self.app_name).getOrCreate()
 
 
     def set_context(self)->None:
