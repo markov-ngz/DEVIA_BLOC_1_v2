@@ -3,7 +3,7 @@ from airflow.providers.docker.operators.docker import DockerOperator
 from pendulum import datetime
 from airflow.models import Variable
 
-@dag(start_date=datetime(2025,1,1), schedule_interval="@daily", catchup=False,tags=["devia"],)
+@dag(start_date=datetime(2024,1,1), schedule_interval="@daily", catchup=False,tags=["devia"],)
 def kafka_pipeline():
     
     environment = {"API_KEY": Variable.get("API_KEY"),"KAFKA_BOOTSTRAP_SERVER":"broker1:9092","KAFKA_TOPIC":"translations.raw.frpl"}
@@ -45,4 +45,4 @@ def kafka_pipeline():
     kafka_transform >> kafka_load
 
 
-dag = kafka_pipeline()
+kafka_pipeline()

@@ -16,7 +16,7 @@ def hdfs_pipeline():
         docker_url="unix://var/run/docker.sock", # as airflow is run inside docker, the socket must be mounted inside the container so that it can listen to docker daemon 
         network_mode="kafka", # name of container's running network
         environment={"HDFS_URL":HDFS_URL,"FILE_PATH":"/translations/file/sftp.csv","SFTP_HOST":Variable("SFTP_HOST"),"SFTP_USERNAME":Variable("SFTP_USERNAME"),"PRIVATE_KEY_PATH":Variable("PRIVATE_KEY_PATH")},
-        volumes = ["key:/home/ubuntu/key","known_hosts:/home/ubuntu/.ssh/known_hosts"] # really insecure please note that this is done as it is not the purpose of this code
+        mounts = ["key:/home/ubuntu/key","known_hosts:/home/ubuntu/.ssh/known_hosts"] # really insecure please note that this is done as it is not the purpose of this code
     )
 
     extract_cassandra = DockerOperator(

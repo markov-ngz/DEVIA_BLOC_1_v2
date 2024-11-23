@@ -42,7 +42,7 @@ public class App {
 
     private static PostgresHandler getDatabaseHandler()throws SQLException{
 
-        String url = "jdbc:postgresql://localhost:7432/TARGET_DB" ; 
+        String url = "jdbc:postgresql://target_database:5432/TARGET_DB" ; 
         String user = "TARGET_USER" ; 
         String password = "raditz" ; 
 
