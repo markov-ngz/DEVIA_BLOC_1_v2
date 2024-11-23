@@ -16,13 +16,13 @@ tar -xf hadoop-3.3.5.tar.gz
 nano ~/.profile
 >>
 export HADOOP_HOME=<hadoop_path>/hadoop-3.3.5
-export PATH="$HOME/bigdata/hadoop-3.3.5/bin:$PATH"
+export PATH="$HOME/<path>/hadoop-3.3.5/bin:$PATH"
 <<
 source ~/.profile
 ```
 4. set $JAVA_HOME in hadoop-env.sh
 ```
-nano etc/hadoop/hadoop-env.sh
+nano $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 >>
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 <<
@@ -60,7 +60,7 @@ ssh localhost
 ```
 3. Format 
 ```
-bin/hdfs namenode -format
+hdfs namenode -format
 ```
 # 3. Run 
 7. run hadoop as single node cluster :  
@@ -75,3 +75,9 @@ Hence you need to allow your user to hadoop's group
 hdfs dfs -chmod 777 /
 ```
 8. Check on WEB GUI ```http://localhost:9870```
+
+# Else : 
+On a fresh machine , install java : 
+```
+sudo apt install default-jre
+```

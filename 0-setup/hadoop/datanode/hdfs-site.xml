@@ -1,0 +1,13 @@
+<configuration>
+    <property>
+        <name>dfs.datanode.hostname</name>
+        <value><datanode_public_ip></value>
+    </property>
+    <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
+        <description>Whether clients should use datanode hostnames when
+            connecting to datanodes.
+        </description>
+    </property>
+</configuration>

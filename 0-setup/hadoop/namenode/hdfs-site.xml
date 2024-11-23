@@ -1,0 +1,27 @@
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+        <property>
+        <name>dfs.namenode.rpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.namenode.servicerpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.datanode.hostname</name>
+        <value><datanode_public_ip>/value>
+    </property>
+    <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>true</value>
+    <description>Whether clients should use datanode hostnames when connecting to datanodes.</description> <!-- Important to also specify this parameter for client application :-) -->
+    </property>
+</configuration>
