@@ -1,19 +1,28 @@
-FROM ubuntu:latest
+FROM python:3.11-slim
 
-RUN apt update -y
+# Install Java (required for PySpark)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    default-jdk \
+    openssh-client \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt install python3 python3-pip openssh-client -y
+# Set environment variables
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+ENV PYTHONPATH=/app/src
+ENV PYSPARK_PYTHON=python3
 
-USER ubuntu 
+# Create and set working directory
+WORKDIR /app
 
-RUN mkdir /home/ubuntu/.ssh
+# Copy requirements file
+COPY requirements.txt .
 
-COPY ./src /home/ubuntu/
-COPY ./requirements.txt /home/ubuntu/requirements.txt
-COPY ./entrypoint.sh /
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install -r /home/ubuntu/requirements.txt --break-system-packages
+# Copy source code
+COPY ./src/ src/
 
-WORKDIR /home/ubuntu
-
-ENTRYPOINT ["sh","/entrypoint.sh"]
+# Set the default command
+CMD ["python", "src/main.py"]
