@@ -43,7 +43,7 @@ def hdfs_pipeline():
         container_name="hdfs_transform",
         docker_url="unix://var/run/docker.sock", # as airflow is run inside docker, the socket must be mounted inside the container so that it can listen to docker daemon 
         network_mode="kafka", # name of container's running network
-        environment={}
+        environment={"HDFS_URL":HDFS_URL,"HDFS_FOLDER":"/translations/output","HDFS_SOURCES":"/translations/cassandra|/translations/sftp|/translations/web_scrapping"}
     )
 
     hdfs_load = DockerOperator(
@@ -52,7 +52,7 @@ def hdfs_pipeline():
         container_name="hdfs_load",
         docker_url="unix://var/run/docker.sock", # as airflow is run inside docker, the socket must be mounted inside the container so that it can listen to docker daemon 
         network_mode="kafka", # name of container's running network
-        environment={}
+        environment={"DB_HOST":"target_database","DB_PORT":"5432","DB_PASSWORD":"raditz","DB_NAME":"TARGET_DB","DB_USERNAME":"TARGET_USER","HDFS_URL":HDFS_URL,"HDFS_FOLDER":"/translations/output"}
     )    
 
     hdfs_transform << extract_sftp

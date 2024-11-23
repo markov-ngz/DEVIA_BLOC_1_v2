@@ -1,12 +1,13 @@
 from JsonLogger import JsonLogger
 from TranslationCleaner import TranslationCleaner 
 from SparkHandler import SparkHandler 
+from Settings import settings 
 
 class Main():
 
     app_name :str = "transformation"
-    source_folders : list[str] = ["/translations/cassandra","/translations/sftp","/translations/web_scrapping"]
-    output_path : str = "hdfs://localhost:9000/translations/output/"
+    source_folders : list[str] = settings["HDFS_SOURCES"].split("|")
+    output_path : str = settings["HDFS_URL"]+settings["HDFS_FOLDER"]
     delimiter :str = "\t"
 
     def __init__(self) -> None:
@@ -23,7 +24,7 @@ class Main():
 
         # Spark Handler and base URL 
         self.spark = SparkHandler(self.app_name)
-        self.spark.set_filesystem("hdfs://localhost:9000")
+        self.spark.set_filesystem(settings["HDFS_URL"])
 
         try : 
             # 1. Get raw data 
