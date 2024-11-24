@@ -11,12 +11,12 @@ The Docker provider is installed so that the scheduler can run docker container 
 2 DAGs (Directed Acyclic Graph) are scheduled to run monthly : <br>
 <b>Kafka DAG</b> 
 <br>
-<img src="images/kafka_dag.png" width=30%>
+<img src="images/kafka_dag.png" width=50%>
 <br>
 
-<b>Hadoop DAG</b> 
+<b>Hadoop DAG</b> <br>
 <img src="images/hadoop_dag.png" width=50%>
-
+<br>
 ## Cite and share
 Please add the license to your work or add a star to the repository 😊 It would really help my career !
 
