@@ -4,7 +4,7 @@ from pendulum import datetime
 from airflow.models import Variable
 
 
-@dag(start_date=datetime(2025,1,1), schedule_interval="@monthly", catchup=False,tags=["devia"],)
+@dag(start_date=datetime(2024,1,1), schedule_interval="@monthly", catchup=False,tags=["devia"],)
 def hdfs_pipeline():
 
     HDFS_URL = Variable("HDFS_URL")
@@ -16,7 +16,7 @@ def hdfs_pipeline():
         docker_url="unix://var/run/docker.sock", # as airflow is run inside docker, the socket must be mounted inside the container so that it can listen to docker daemon 
         network_mode="kafka", # name of container's running network
         environment={"HDFS_URL":HDFS_URL,"FILE_PATH":"/translations/file/sftp.csv","SFTP_HOST":Variable("SFTP_HOST"),"SFTP_USERNAME":Variable("SFTP_USERNAME"),"PRIVATE_KEY_PATH":Variable("PRIVATE_KEY_PATH")},
-        mounts = ["key:/home/ubuntu/key","known_hosts:/home/ubuntu/.ssh/known_hosts"] # really insecure please note that this is done as it is not the purpose of this code
+        mounts = ["sftp_key:/home/ubuntu/"] # really insecure please note that this is done as it is not the purpose of this code
     )
 
     extract_cassandra = DockerOperator(
