@@ -19,7 +19,7 @@ class Main():
 
         # 1. Get clean data 
         spark = SparkHandler(self.app_name)
-        spark.set_filesystem()
+        spark.set_filesystem(settings.hdfs_url)
         df = spark.get_dataframes([settings.hdfs_folder],header=True,delimiter="\t", aggregate=True)
 
         # # 2. Get langues and sources 
@@ -37,13 +37,13 @@ class Main():
         # 3. Map the languages and the source to the DataFrame 
         df = loader.map_fk(df,languages_ids,"languages_id")
         df = loader.map_fk(df,sources_ids,"source_id")
-        df = df.withColumn("extracted_at",localtimestamp())
+        df = df.withColumn("extracted_at",localtimestamp()).drop("created_at")
         
-        # 4. Remove existing rows from Database 
+        # 4. Remove existing rows from Database by comparing existing computed hash
         df = df.withColumn("hash",md5(concat(col("text_origin"),col("text_target"),col("languages_id"))))
         df_existing_hash  = loader.get_hashs(spark)
         df = df.join(df_existing_hash,df.hash == df_existing_hash.existing_hash, "leftanti").drop("hash")
-        
+
         # # 5. Write DataFrame to Target Database
         pd = df.toPandas().drop_duplicates(["text_origin","text_target","languages_id"])
         pd.to_csv("temp_file.csv",sep="|",index=False,header=False, quotechar="}") # Ugly Loading as loading the dataframe into a buffer BytesIO object did not work ( no error raised simply no iteration ? )

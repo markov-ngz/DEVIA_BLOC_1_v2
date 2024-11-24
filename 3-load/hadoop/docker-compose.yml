@@ -1,0 +1,12 @@
+services:
+  hadoopload:
+    container_name: hadoop_load
+    image: markreduce/etl:hadoopload
+    env_file:
+      - .env
+    networks:
+      - kafka
+networks:
+  kafka:
+    name: kafka
+    external: true
