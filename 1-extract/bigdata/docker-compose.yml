@@ -1,0 +1,11 @@
+services:
+  bigdata:
+    container_name: bigdata
+    image: markreduce/etl:bigdata
+    env_file:
+      - .env
+    networks:
+      - kafka
+networks:
+  kafka:
+    external: true

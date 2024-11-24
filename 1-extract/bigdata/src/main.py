@@ -59,7 +59,7 @@ class Main():
         
     def load_config(self, env_variables : list[str])->None : 
         self.config = {k : os.getenv(k) for k in env_variables}
-        for k , v in self.config : 
+        for k , v in self.config.items() : 
             if v == None : 
                 raise Exception("Environment variable %s is not set." % k ) 
 

@@ -1,6 +1,6 @@
 networks:
-  cassandra:
-
+  kafka:
+    external: true
 services:
   node-1:
     image: cassandra:latest
@@ -14,7 +14,7 @@ services:
       CASSANDRA_DC: my-datacenter
       CASSANDRA_BROADCAST_ADDRESS: node-1
     networks:
-      - cassandra
+      - kafka
     
     healthcheck:
       test: ["CMD-SHELL", "nodetool status"]
