@@ -1,1 +1,1 @@
-python3 main.py
+sleep 120 # used to check the volume mounts

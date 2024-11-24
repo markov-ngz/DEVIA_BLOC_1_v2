@@ -23,14 +23,14 @@ class SparkHandler() :
         try : 
             df.write.csv(path,quote=quotechar, sep=sep, mode=mode )
         except Exception as e : 
-            self.logger.error(e)
+            self.logger.error(str(e))
             raise e 
     
     def read(self,path:str)->DataFrame:
         try:
             return self.session.read.text(path)
         except Exception as e :
-            self.logger.error(e)
+            self.logger.error(str(e))
             raise e 
 
     def set_columns(self, df : DataFrame , col : dict )-> DataFrame:

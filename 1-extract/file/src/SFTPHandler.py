@@ -1,5 +1,6 @@
 import paramiko
-import pandas as pd 
+import pandas as pd
+import paramiko.client 
 from JsonLogger import JsonLogger 
 
 class SFTPHandler():
@@ -19,16 +20,19 @@ class SFTPHandler():
         
         self.ssh = paramiko.SSHClient()
         self.ssh.load_system_host_keys()
+        self.ssh.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
 
     def read_file(self, remote_file_path:str, sep: str="\t")->pd.DataFrame :   
         """
         Instantiate a the connection and retrieve the file bytes 
         """
+       
         try : 
+            self.ssh.connect(self.host, username=self.username, pkey=self.key)
             with self.ssh.open_sftp() as sftp:
                 with sftp.open(remote_file_path,"rb") as f :
                     df = pd.read_csv(f,sep=sep)
-            self.logger({"method":"read_file","result":"success","file":remote_file_path})
+            self.logger.info({"method":"read_file","result":"success","file":remote_file_path})
             return df 
         except Exception as e :
             self.logger.error({"method":"read_file","result":"failure","file":remote_file_path,"error":str(e)})

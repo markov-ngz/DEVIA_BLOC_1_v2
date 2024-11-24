@@ -1,9 +1,12 @@
 services:
   file:
-    container_name: file
+    container_name: sftp
     image: markreduce/etl:file
     volumes:
-      - ./sftp:/home/ubuntu/sftp # private key 
-      - ./known_hosts:/home/ubuntu/.ssh/known_hosts # allowed hosts 
+      - sftp_key:/home/ubuntu:ro # private key 
     env_file:
       - .env
+volumes:
+  sftp_key:
+    name: sftp_key
+    external: true

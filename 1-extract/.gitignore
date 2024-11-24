@@ -9,3 +9,4 @@ venv
 sftp
 known_hosts
 .gitignore
+*.tar
