@@ -6,7 +6,13 @@ services:
       - sftp_key:/home/ubuntu:ro # private key 
     env_file:
       - .env
+    networks:
+      - kafka
 volumes:
   sftp_key:
     name: sftp_key
+    external: true
+
+networks:
+  kafka:
     external: true

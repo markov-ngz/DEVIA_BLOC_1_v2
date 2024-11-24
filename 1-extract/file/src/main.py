@@ -34,13 +34,13 @@ class Main():
         self.spark = SparkHandler(self.app_name)
 
         # 5. Transform the pandas.DataFrame into  a Spark.DataFrame 
-        spark_df =  self.spark.session.createDataFrame(df)
+        spark_df =  self.spark.session.createDataFrame(df,["index","text_origin","index2","text_target"])
+        spark_df = spark_df.drop("index").drop("index2")
 
         # 6. Add metadata columns 
         df_final = self.add_columns(spark_df)
-
         # 7. Write the file 
-        self.spark.write(df_final,self.hdfs_url + self.file_path, add_timestamp= True )
+        self.spark.write(df_final,self.hdfs_url + self.file_path, add_timestamp= True ,header=True)
 
     def load_config(self):
         self.key_path = os.getenv("PRIVATE_KEY_PATH")

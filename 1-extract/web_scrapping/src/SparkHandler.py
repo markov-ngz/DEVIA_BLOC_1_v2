@@ -17,11 +17,12 @@ class SparkHandler() :
             os.environ["PYSPARK_PYTHON"] = "python" 
             self.logger.warning("Environment Variable PYSPARK_PYTHON not set. Setting its value as 'python'")
 
-    def write(self,df:DataFrame, path: str , sep:str ='\t',quotechar=None,mode:str ='append', add_timestamp : bool = False)->None:
+    def write(self,df:DataFrame, path: str , sep:str ='\t',quotechar=None,mode:str ='append', add_timestamp : bool = False, header=None)->None:
         if add_timestamp : 
             path = self.add_timestamp(path) 
+        
         try : 
-            df.write.csv(path,quote=quotechar, sep=sep, mode=mode )
+            df.write.csv(path,quote=quotechar, sep=sep, mode=mode, header=header )
         except Exception as e : 
             self.logger.error(str(e))
             raise e 

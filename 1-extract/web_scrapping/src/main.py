@@ -31,9 +31,9 @@ class WebScrapping():
             
             # 2. Get the translations as a spark.DataFrame 
             raw_df_scrap = HTMLParser().get_traductions(html_scrapped,self.url, spark)
-            
+
             # 3. Write into HDFS 
-            spark.write(raw_df_scrap,self.config["HDFS_URL"] + self.config["FILE_PATH"], add_timestamp=True )
+            spark.write(raw_df_scrap,self.config["HDFS_URL"] + self.config["FILE_PATH"], add_timestamp=True, header=True )
             self.logger.info("Successfully writed file to %s" % self.config["FILE_PATH"])
 
         except Exception as e : 

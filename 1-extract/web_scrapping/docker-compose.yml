@@ -2,16 +2,8 @@ services:
   scrapping:
     container_name: scrapping
     image: markreduce/etl:webscrapping
-    # build:
-    #   context: .
-    # volumes:
-    #   - scrap_logs:/usr/src/app/logs
-    environment:
-      # LOG_FILE: ./logs/.log
-      HDFS_URL: hdfs://host.docker.internal:9000
-      FILE_PATH: /web_scrapping.csv
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
 networks:
   kafka:
     name: kafka

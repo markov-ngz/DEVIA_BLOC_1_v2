@@ -6,8 +6,8 @@ from Settings import settings
 class Main():
 
     app_name :str = "transformation"
-    source_folders : list[str] = settings["HDFS_SOURCES"].split("|")
-    output_path : str = settings["HDFS_URL"]+settings["HDFS_FOLDER"]
+    source_folders : list[str] = settings.hdfs_sources.split("|")
+    output_path : str = settings.hdfs_url+settings.hdfs_folder
     delimiter :str = "\t"
 
     def __init__(self) -> None:
@@ -24,7 +24,7 @@ class Main():
 
         # Spark Handler and base URL 
         self.spark = SparkHandler(self.app_name)
-        self.spark.set_filesystem(settings["HDFS_URL"])
+        self.spark.set_filesystem(settings.hdfs_url)
 
         try : 
             # 1. Get raw data 

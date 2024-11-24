@@ -24,6 +24,7 @@ class TranslationCleaner():
                 df = self.format_columns(df)
                 # Count null lines 
                 file_statistics["count_null_by_columns"] = {col:df.filter(df[col].isNull()).count() for col in df.columns}
+                
                 # Drop them 
                 df = df.dropna(subset=["text_origin","text_target","lang_origin","lang_target"])
                 # Filter on length
@@ -31,9 +32,8 @@ class TranslationCleaner():
                 # Quotechar filtering
                 df.text_origin = df.select(regexp_replace('text_origin', r'"""', '"').alias("text_origin"))
                 df.text_target = df.select(regexp_replace('text_target', r'"""', '"').alias("text_target"))
-                
                 # Filter based on a % of character len 
-                df = df.withColumn("len_origin-len_target",abs((length(col('text_origin')) - length(col('text_target'))) / length(col('text_origin'))))
+                df = df.withColumn("len_origin-len_target",abs((length(col('text_origin')) - length(col('text_target'))) / (length(col('text_origin')) + length(col('text_target')))   ))
                 df = df.filter(col('len_origin-len_target') < 0.1)
                 df = df.drop("len_origin-len_target")
                 clean_dfs.append(df)
@@ -69,9 +69,9 @@ class TranslationCleaner():
                 as if the project was well conceived the entry data should already have a defined format     
         """
         
-        text_origin_columns = {"raw_columns":["text_source","source_text","text_origin","origin_text","from","from_text","text_from"] , "formatted":"text_origin"}
+        text_origin_columns = {"raw_columns":["src_text","text_source","source_text","text_origin","origin_text","from","from_text","text_from"] , "formatted":"text_origin"}
         text_target_columns = {"raw_columns":["to_text","text_to","to","target_text","text_target"],"formatted":"text_target"}
-        lang_origin_columns = {"raw_columns":["lang_origin","lang_source","source_lang"], "formatted":"lang_origin"}
+        lang_origin_columns = {"raw_columns":["src_lang","lang_origin","lang_source","source_lang"], "formatted":"lang_origin"}
         lang_target_columns =  {"raw_columns":["lang_target","target_lang","or"], "formatted":"lang_target"}
         source_columns =  {"raw_columns":["source","source_value"], "formatted":"source_columns"}
         source_type_columns =  {"raw_columns":["source_type","type"], "formatted":"source_type"}

@@ -1,0 +1,10 @@
+services:
+  hadooptransform:
+    container_name: hadoop_transform
+    image: markreduce/etl:hadooptransform
+    env_file:
+      - .env
+networks:
+  kafka:
+    name: kafka
+    external: true

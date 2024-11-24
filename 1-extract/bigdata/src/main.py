@@ -53,7 +53,7 @@ class Main():
         df_final = spark.set_columns(df,self.metadata) 
 
         ## Write the dataframe to hdfs 
-        spark.write(df_final,path,add_timestamp=True)
+        spark.write(df_final,path,add_timestamp=True,header=True)
         
         self.logger.info("Successfully written file to {0}".format(path))
         
