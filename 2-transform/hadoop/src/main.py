@@ -34,10 +34,10 @@ class Main():
             if len(dataframes) > 0 : 
                 # 2. Transform it 
                 final_dataframe = TranslationCleaner().clean(dataframes)
+
                 self.logger.info("DataFrames transformed and aggregated ".format(len(dataframes.keys())))
-                
                 # 3. Write output to HDFS 
-                self.spark.write(final_dataframe, self.output_path + "clean.csv",add_timestamp=True)
+                self.spark.write(final_dataframe, self.output_path + "clean.csv",add_timestamp=True, header=True)
                 self.logger.info("Data Transformed. Final dataset contains {0} rows ".format(final_dataframe.count()))
                 
         except Exception as e :

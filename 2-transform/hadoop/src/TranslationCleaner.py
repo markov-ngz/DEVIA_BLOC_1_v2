@@ -43,10 +43,10 @@ class TranslationCleaner():
             finally : 
                 self.logger.info(file_statistics)
         
-        # Aggregate 
-        final_df = reduce(DataFrame.unionAll,clean_dfs)
-
-        return final_df 
+        for i in range(0,len(clean_dfs)-1):
+            df = df.unionByName(clean_dfs[i])
+        
+        return df
     def format_column(self,columns_names: list[str], output_column : str , df : DataFrame, raise_on_not_found : bool = False ) -> DataFrame :
         """
         If a the dataframe has a column in the given column list of names  \n 

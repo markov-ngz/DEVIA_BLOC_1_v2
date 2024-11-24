@@ -22,15 +22,12 @@ class Main():
         spark.set_filesystem(settings.hdfs_url)
         df = spark.get_dataframes([settings.hdfs_folder],header=True,delimiter="\t", aggregate=True)
 
-        # # 2. Get langues and sources 
+        # 2. Get langues and sources 
         distinct_langs : list[Row] = df.select('lang_origin','lang_target').distinct().collect()
         distinct_source : list[Row] = df.select('source_columns','source_type').distinct().collect()
 
         loader = TranslationLoader(settings.database_hostname, settings.database_port,settings.database_name ,settings.database_username, settings.database_password)
         loader.connect()
-
-        
-
         languages_ids = loader.insertLanguages(distinct_langs)
         sources_ids = loader.insertSources(distinct_source)
         
@@ -44,7 +41,7 @@ class Main():
         df_existing_hash  = loader.get_hashs(spark)
         df = df.join(df_existing_hash,df.hash == df_existing_hash.existing_hash, "leftanti").drop("hash")
 
-        # # 5. Write DataFrame to Target Database
+        # 5. Write DataFrame to Target Database
         pd = df.toPandas().drop_duplicates(["text_origin","text_target","languages_id"])
         pd.to_csv("temp_file.csv",sep="|",index=False,header=False, quotechar="}") # Ugly Loading as loading the dataframe into a buffer BytesIO object did not work ( no error raised simply no iteration ? )
         loader.copy_csv("public.translations","|",hquote="}",file_path="temp_file.csv") 
