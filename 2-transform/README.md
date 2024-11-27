@@ -10,15 +10,15 @@ Generic
 - datasets columns names
 - no null
 
-Entrée corrompues
--  10% difference len trop importante entre parole/traduit
+Corrupted data 
+-  10% length difference between 2 texts 
 
 Duplicates are handled at loading ( even though it could be done at this step )
 
 ## 1. Kafka
 
-### Summary Schema : 
-<img src="images/kafka_transfo.png">
+### Summary Schema 
+<img width=50% src="images/kafka_transfo.png">
 
 ### 1.1 Format the data
 The first step is to match the Debezium Kafka Connector messages to a generic format.
@@ -29,7 +29,10 @@ After being transformed the data is the published to a topic for the cleaned dat
 
 ## 2. Hadoop 
 
+### Summary Schema 
+<img width=50% src="images/ETL_hadoop.png">
 
-
-
-
+### File Architecture
+Each data source has a folder. </br>
+To add a source to transform, the folder must be specified to an environment variable ```HDFS_SOURCES```. </br>
+The output result will be added to the folder ```/translations/output``` .

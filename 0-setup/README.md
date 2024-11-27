@@ -1,5 +1,0 @@
-# SFTP server configuration
-
-## Steps
-
-
