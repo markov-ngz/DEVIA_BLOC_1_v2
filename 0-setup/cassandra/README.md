@@ -12,7 +12,7 @@ Apache Cassandra utilise 3 ports :
 </ul>
 
 <br>
-<img src="cassandra_schema.png" width=50%>
+<img src="images/cassandra_schema.png" width=50%>
 
 ## Structure 
 Au niveau de l'organisation de la structure des données , on retrouve 3 concepts : 
@@ -22,7 +22,7 @@ Au niveau de l'organisation de la structure des données , on retrouve 3 concept
 <li>Table : Comparative aux tables SQL classique</li>
 </ul>
 
-<img src="cassandra_structure.png" width=25%>
+<img src="images/cassandra_structure.png" width=25%>
 
 ## Help
 liens utiles: 
