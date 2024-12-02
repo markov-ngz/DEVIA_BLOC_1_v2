@@ -31,27 +31,34 @@ public class App {
             try {
                 // 2.1 Deserialiase Json Record
                 DebeziumMessage obj = handler.parseJson(record, DebeziumMessage.class);
-
-                // 2.2 Get the value of the new data inserted 
-                TranslationValue value = obj.getPayload().getAfter();
-
-                Logger.info(value.getFrench());
-
-                DebeziumSource source  = obj.getPayload().getSource() ; 
                 
-                String source_value = source.getDb() + "." + source.getSchema() + "." + source.getTable()  ;
+                // deal only creation or update
+                if(obj.getPayload().getOp() == "c" || obj.getPayload().getOp() == "u" ){
+                    // 2.2 Get the value of the new data inserted 
+                    TranslationValue value = obj.getPayload().getAfter();
 
-                // 2.3 Map it to the expected the format
-                Translation final_translation = new Translation(
-                                                    value.getFrench(), 
-                                                    value.getPolish(), 
-                                                    obj.getPayload().getTsMs(),
-                                                    source_value) ;
+                    Logger.info(value.getFrench());
 
-                // 2.4 Publish the serialized object to a topic 
-                handler.publish(target_topic, "key2", final_translation).get();
-                
-                Logger.info(final_translation.to_json());
+                    DebeziumSource source  = obj.getPayload().getSource() ; 
+                    
+                    String source_value = source.getDb() + "." + source.getSchema() + "." + source.getTable()  ;
+
+                    // 2.3 Map it to the expected the format
+                    Translation final_translation = new Translation(
+                                                        value.getFrench(), 
+                                                        value.getPolish(), 
+                                                        obj.getPayload().getTsMs(),
+                                                        source_value) ;
+
+                    // 2.4 Publish the serialized object to a topic 
+                    handler.publish(target_topic, "key2", final_translation).get();
+                    
+                    Logger.info(final_translation.to_json());
+                }else{
+                    continue ; 
+                }
+
+
 
             } catch (Exception e) {
                 Logger.error(e);
